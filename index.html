@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mindhaus — a private space for mental wellbeing, designed to grow with you from age 6 to 106.">
+<title>Mindhaus — a private space for your mind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:wght@300..700&family=Nunito:wght@400;600;800&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MINDHAUS — shared tokens + 4 age themes
+   Each theme redefines the same CSS variables so the same
+   component markup renders as four genuinely different apps.
+   ============================================================ */
+
+:root{
+  --bg: #F4F1EA; --surface: #FCF9F2; --ink: #2E2A24; --ink-soft: #6B6357;
+  --line: #DDD2BE; --primary: #5C6B52; --primary-soft: #EBF0E4; --on-primary: #FCF9F2;
+  --secondary: #C4643B; --secondary-soft: #F6E2D2; --on-secondary: #FCF9F2;
+  --accent: #D9A441; --accent-soft: #F8EBC9; --danger: #B14B3F;
+  --radius: 16px; --radius-lg: 24px; --radius-sm: 10px;
+  --shadow-1: 0 2px 6px -2px rgba(46,42,36,.08), 0 8px 24px -12px rgba(46,42,36,.18);
+  --shadow-2: 0 16px 48px -20px rgba(46,42,36,.32);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+  --base-size: 16px;
+}
+
+/* ---------- KID theme ---------- */
+body[data-age="kid"]{
+  --bg: #FFF6E0; --surface: #FFFFFF; --ink: #2D3142; --ink-soft: #5A5E7A;
+  --line: #F2E4B8; --primary: #FF6B6B; --primary-soft: #FFE3E3; --on-primary: #FFFFFF;
+  --secondary: #4ECDC4; --secondary-soft: #D8F5F3; --on-secondary: #073B3A;
+  --accent: #FFD93D; --accent-soft: #FFF3B0; --danger: #E94560;
+  --radius: 22px; --radius-lg: 32px; --radius-sm: 14px;
+  --shadow-1: 0 4px 0 rgba(45,49,66,.08), 0 8px 24px -8px rgba(255,107,107,.18);
+  --font-display: 'Nunito', 'Comic Sans MS', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --base-size: 18px;
+}
+
+/* ---------- TEEN theme ---------- */
+body[data-age="teen"]{
+  --bg: #0F0E17; --surface: #1A1925; --ink: #FFFFFE; --ink-soft: #94A1B2;
+  --line: #2A2740; --primary: #7F5AF0; --primary-soft: #2D2752; --on-primary: #FFFFFE;
+  --secondary: #2CB67D; --secondary-soft: #1B3A2E; --on-secondary: #FFFFFE;
+  --accent: #FF8906; --accent-soft: #3B2516; --danger: #E53170;
+  --radius: 14px; --radius-lg: 20px; --radius-sm: 8px;
+  --shadow-1: 0 1px 0 rgba(255,255,255,.04), 0 12px 32px -16px rgba(127,90,240,.4);
+  --shadow-2: 0 24px 60px -24px rgba(127,90,240,.5);
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --base-size: 16px;
+}
+
+/* ---------- ADULT theme (default) ---------- */
+body[data-age="adult"]{
+  --bg: #F4F1EA; --surface: #FCF9F2; --ink: #2E2A24; --ink-soft: #6B6357;
+  --line: #DDD2BE; --primary: #5C6B52; --primary-soft: #EBF0E4; --on-primary: #FCF9F2;
+  --secondary: #C4643B; --secondary-soft: #F6E2D2; --on-secondary: #FCF9F2;
+  --accent: #D9A441; --accent-soft: #F8EBC9; --danger: #B14B3F;
+  --radius: 16px; --radius-lg: 24px; --radius-sm: 10px;
+  --shadow-1: 0 2px 6px -2px rgba(46,42,36,.08), 0 8px 24px -12px rgba(46,42,36,.18);
+  --shadow-2: 0 16px 48px -20px rgba(46,42,36,.32);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+  --base-size: 16px;
+}
+
+/* ---------- SENIOR theme ---------- */
+body[data-age="senior"]{
+  --bg: #FBF7F0; --surface: #FFFCF5; --ink: #2A1810; --ink-soft: #5C4434;
+  --line: #E8DCC4; --primary: #6B4423; --primary-soft: #EBDDC9; --on-primary: #FFFCF5;
+  --secondary: #8B2635; --secondary-soft: #F2D7D9; --on-secondary: #FFFCF5;
+  --accent: #B8860B; --accent-soft: #F4E4BD; --danger: #8B2635;
+  --radius: 12px; --radius-lg: 18px; --radius-sm: 8px;
+  --shadow-1: 0 1px 3px rgba(42,24,16,.08), 0 4px 14px -6px rgba(107,68,35,.18);
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+  --base-size: 20px;
+}
+
+/* ============================================================
+   reset + base
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--base-size);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+h1,h2,h3,h4,.display{font-family:var(--font-display);font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:6px}
+
+/* ============================================================
+   age switcher
+   ============================================================ */
+header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{max-width:1180px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-size:1.35rem;display:flex;align-items:center;gap:.55rem;font-weight:600;flex-shrink:0}
+.brand-dot{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));box-shadow:0 0 0 3px var(--surface), 0 0 0 4px var(--line)}
+.age-switch{margin-left:auto;display:flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--surface)}
+.age-switch button{border:0;background:transparent;font-weight:700;padding:.5rem 1rem;font-size:.85rem;color:var(--ink-soft);transition:.2s;display:flex;align-items:center;gap:.4rem}
+.age-switch button.on{background:var(--ink);color:var(--bg)}
+.age-switch button:hover:not(.on){background:var(--surface)}
+.crisis-btn{border:1.5px solid var(--danger);color:var(--danger);background:transparent;border-radius:999px;padding:.5rem 1rem;font-weight:600;font-size:.85rem;display:flex;align-items:center;gap:.4rem;text-decoration:none;transition:.2s}
+.crisis-btn:hover{background:var(--danger);color:#fff}
+
+@media(max-width:780px){
+  .nav{padding:.7rem 1rem}
+  .age-switch button span.label{display:none}
+  .age-switch button{padding:.5rem .8rem;font-size:.95rem}
+  .crisis-btn span.label{display:none}
+  .crisis-btn{padding:.5rem .7rem}
+}
+
+/* ============================================================
+   layout
+   ============================================================ */
+main{max-width:1180px;margin:0 auto;padding:1.5rem}
+section{margin:1.5rem 0;padding:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:1.8rem;box-shadow:var(--shadow-1)}
+.card.lift{transition:transform .25s,box-shadow .25s}
+.card.lift:hover{transform:translateY(-3px);box-shadow:var(--shadow-2)}
+.row{display:flex;gap:1rem;flex-wrap:wrap}
+.row.between{justify-content:space-between;align-items:center}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* ============================================================
+   buttons
+   ============================================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:0;cursor:pointer;font-weight:600;font-size:.95rem;padding:.75rem 1.4rem;border-radius:999px;transition:.2s;text-decoration:none;line-height:1.2;font-family:inherit}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.primary:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.btn.secondary{background:var(--secondary);color:var(--on-secondary)}
+.btn.secondary:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.btn.ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg)}
+.btn.soft{background:var(--primary-soft);color:var(--ink)}
+.btn.soft:hover{background:var(--secondary-soft)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.sm{padding:.5rem 1rem;font-size:.85rem}
+.btn.lg{padding:1rem 1.8rem;font-size:1.05rem}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ============================================================
+   forms
+   ============================================================ */
+.field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.field label{font-size:.85rem;font-weight:600;color:var(--ink-soft);letter-spacing:.04em}
+.input,.textarea,.select{border:1.5px solid var(--line);background:var(--bg);border-radius:var(--radius);padding:.85rem 1rem;font-size:1rem;width:100%;color:var(--ink);transition:.2s}
+.input:focus,.textarea:focus,.select:focus{outline:none;border-color:var(--primary);background:var(--surface)}
+.textarea{min-height:100px;resize:vertical;line-height:1.55}
+.field-help{font-size:.8rem;color:var(--ink-soft)}
+
+/* ============================================================
+   onboarding (age picker landing)
+   ============================================================ */
+.onboard{padding:3rem 1rem 4rem;text-align:center;max-width:880px;margin:0 auto}
+.onboard h1{font-size:clamp(2.4rem,5.5vw,3.8rem);line-height:1.05;margin-bottom:1rem}
+.onboard .sub{color:var(--ink-soft);font-size:1.15rem;max-width:36rem;margin:0 auto 2.5rem}
+.track-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
+@media(max-width:780px){.track-grid{grid-template-columns:repeat(2,1fr)}}
+.track-card{background:var(--surface);border:2px solid var(--line);border-radius:var(--radius-lg);padding:1.5rem 1rem;cursor:pointer;transition:.25s;text-align:center;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.track-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:var(--shadow-1)}
+.track-card .emoji{font-size:2.4rem;line-height:1}
+.track-card .name{font-family:var(--font-display);font-size:1.3rem;font-weight:600}
+.track-card .age{font-size:.8rem;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.track-card .blurb{font-size:.85rem;color:var(--ink-soft);margin-top:.3rem;line-height:1.4}
+
+.privacy-pill{display:inline-flex;align-items:center;gap:.5rem;background:var(--primary-soft);color:var(--ink);padding:.4rem .9rem;border-radius:999px;font-size:.82rem;margin-bottom:1.5rem;font-weight:500}
+
+/* ============================================================
+   hero (track home)
+   ============================================================ */
+.hero{padding:2.5rem 0 1rem;display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:1.5rem}}
+.hero .eyebrow{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--secondary);margin-bottom:1rem;font-weight:700}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.05;margin-bottom:1.2rem}
+.hero h1 em{font-style:italic;color:var(--secondary)}
+.hero .lede{color:var(--ink-soft);font-size:1.1rem;max-width:34rem;margin-bottom:1.8rem}
+.hero-actions{display:flex;gap:.8rem;flex-wrap:wrap}
+
+/* ============================================================
+   shared utility components
+   ============================================================ */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.sec-head h2{font-size:clamp(1.6rem,3vw,2.1rem)}
+.sec-head .sub{color:var(--ink-soft);font-size:.95rem;max-width:32rem}
+.tag{display:inline-block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;background:var(--primary-soft);color:var(--ink);padding:.3rem .7rem;border-radius:999px;font-weight:600}
+.muted{color:var(--ink-soft)}
+.center{text-align:center}
+.divider{border:0;border-top:1px solid var(--line);margin:2.5rem 0}
+
+.toast{position:fixed;bottom:1.6rem;left:50%;transform:translate(-50%,120%);background:var(--ink);color:var(--bg);padding:.85rem 1.5rem;border-radius:999px;font-size:.88rem;z-index:200;transition:.4s cubic-bezier(.3,1.4,.5,1);display:flex;align-items:center;gap:.5rem;max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+
+/* ============================================================
+   crisis modal
+   ============================================================ */
+.modal-bg{position:fixed;inset:0;background:rgba(20,16,12,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:1.5rem}
+.modal-bg.open{display:flex;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border-radius:var(--radius-lg);max-width:560px;width:100%;padding:2rem;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-2)}
+.modal h2{font-size:1.6rem;margin-bottom:.6rem}
+.modal .close{position:absolute;top:1rem;right:1rem;background:var(--bg);border:0;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--ink)}
+.modal-wrap{position:relative}
+.crisis-list{display:flex;flex-direction:column;gap:.7rem;margin-top:1.2rem}
+.crisis-item{border:1.5px solid var(--line);border-radius:var(--radius);padding:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.crisis-item .name{font-weight:600;font-size:1rem}
+.crisis-item .num{font-family:var(--font-display);font-size:1.4rem;font-weight:600;color:var(--secondary)}
+.crisis-item .hours{font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+.disclaimer{font-size:.82rem;color:var(--ink-soft);margin-top:1.2rem;padding-top:1.2rem;border-top:1px dashed var(--line);line-height:1.5}
+
+/* ============================================================
+   tool common (mood pickers, charts, lists)
+   ============================================================ */
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem}
+@media(max-width:540px){.mood-grid{grid-template-columns:repeat(3,1fr)}}
+.mood-tile{background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);padding:1.1rem .5rem;cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.mood-tile:hover{transform:translateY(-3px);border-color:var(--primary)}
+.mood-tile.sel{border-color:var(--secondary);background:var(--secondary-soft);box-shadow:var(--shadow-1)}
+.mood-tile .face{font-size:1.8rem;line-height:1}
+.mood-tile .label{font-size:.78rem;font-weight:600;color:var(--ink-soft)}
+.mood-tile.sel .label{color:var(--secondary)}
+
+.scale{display:flex;gap:.4rem;flex-wrap:wrap;margin:.5rem 0}
+.scale button{flex:1;min-width:46px;height:46px;border-radius:var(--radius-sm);border:1.5px solid var(--line);background:var(--surface);font-weight:700;font-size:1rem;color:var(--ink);transition:.2s}
+.scale button:hover{border-color:var(--primary)}
+.scale button.sel{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+
+.list{display:flex;flex-direction:column;gap:.6rem;max-height:420px;overflow-y:auto;padding-right:.3rem}
+.list-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.2rem;position:relative;animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
+.list-item .when{font-size:.75rem;color:var(--ink-soft);margin-top:.4rem;display:block}
+.list-item .del{position:absolute;top:.6rem;right:.6rem;border:0;background:transparent;color:var(--ink-soft);width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.list-item .del:hover{background:var(--bg);color:var(--danger)}
+
+.empty{padding:2rem 1rem;text-align:center;color:var(--ink-soft);font-style:italic;font-family:var(--font-display)}
+
+/* ============================================================
+   chart (bar)
+   ============================================================ */
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:1.4rem}
+.bars{display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:1rem}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;justify-content:flex-end;height:100%}
+.bar{width:100%;max-width:32px;background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:.5rem .5rem .2rem .2rem;min-height:4px;position:relative;transition:height .6s cubic-bezier(.3,1.4,.5,1)}
+.bar:hover::after{content:attr(data-label);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-size:.7rem;padding:.25rem .55rem;border-radius:.4rem;white-space:nowrap;font-style:normal}
+.bar-lbl{font-size:.68rem;color:var(--ink-soft)}
+
+/* ============================================================
+   breathing exercise (used by all tracks)
+   ============================================================ */
+.breath-stage{position:relative;display:flex;align-items:center;justify-content:center;height:240px;margin:1rem 0}
+.breath-orb{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--primary-soft),var(--primary));transition:transform 4s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;color:var(--on-primary);font-family:var(--font-display);font-size:1.1rem;font-weight:600;text-align:center;box-shadow:0 0 0 12px var(--surface), 0 0 0 14px var(--line)}
+.breath-orb.inhale{transform:scale(1.3)}
+.breath-orb.hold{transform:scale(1.3)}
+.breath-orb.exhale{transform:scale(.7)}
+.breath-orb.hold-out{transform:scale(.7)}
+.breath-orb.idle{transform:scale(1)}
+.breath-phase{position:absolute;top:1rem;left:50%;transform:translateX(-50%);font-family:var(--font-display);font-size:1.3rem;color:var(--ink-soft);min-width:140px;text-align:center}
+.breath-counts{display:flex;justify-content:center;gap:1.4rem;flex-wrap:wrap;margin-top:1rem;font-size:.9rem;color:var(--ink-soft)}
+.breath-counts span strong{color:var(--ink);font-family:var(--font-display);font-size:1.1rem}
+
+/* ============================================================
+   KID-specific styling — playful, big, friendly
+   ============================================================ */
+body[data-age="kid"] .card{border-width:2px}
+body[data-age="kid"] .btn{font-weight:800}
+body[data-age="kid"] .breath-orb{border-radius:42% 58% 55% 45%/52% 48% 50% 48%;animation:morph 9s ease-in-out infinite}
+body[data-age="kid"] .breath-orb.idle{animation:morph 9s ease-in-out infinite}
+@keyframes morph{0%,100%{border-radius:42% 58% 55% 45%/52% 48% 50% 48%}50%{border-radius:55% 45% 40% 60%/45% 55% 45% 55%}}
+body[data-age="kid"] .mood-tile{padding:1.3rem .5rem}
+body[data-age="kid"] .mood-tile .face{font-size:2.4rem}
+.buddy{width:96px;height:96px;display:inline-block}
+.kid-streak{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+.streak-star{width:36px;height:36px;background:var(--accent-soft);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:2px solid var(--accent)}
+.streak-star.on{background:var(--accent);color:var(--ink)}
+
+/* ============================================================
+   TEEN-specific — dark, glassy, modern
+   ============================================================ */
+body[data-age="teen"]{background:radial-gradient(ellipse at top, #1A1925 0%, #0F0E17 60%);min-height:100vh}
+body[data-age="teen"] header{background:rgba(15,14,23,.7)}
+body[data-age="teen"] .card{background:rgba(26,25,37,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line)}
+body[data-age="teen"] .btn{font-weight:600;letter-spacing:.01em}
+body[data-age="teen"] .input,body[data-age="teen"] .textarea,body[data-age="teen"] .select{background:rgba(255,255,255,.04);color:var(--ink)}
+body[data-age="teen"] .mood-tile{background:rgba(255,255,255,.03);border:1.5px solid var(--line)}
+body[data-age="teen"] .mood-tile.sel{background:rgba(127,90,240,.18);border-color:var(--primary)}
+body[data-age="teen"] .scale button{background:rgba(255,255,255,.04)}
+body[data-age="teen"] .list-item{background:rgba(255,255,255,.04)}
+body[data-age="teen"] .bar{background:linear-gradient(180deg,var(--primary),var(--accent))}
+body[data-age="teen"] .breath-orb{background:radial-gradient(circle at 30% 30%,#7F5AF0,#2CB67D);box-shadow:0 0 60px -10px var(--primary), 0 0 0 8px rgba(127,90,240,.1)}
+.teen-tag-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem}
+.teen-tag{padding:.4rem .85rem;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink-soft);font-size:.82rem;cursor:pointer;transition:.2s}
+.teen-tag.sel{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+
+/* ============================================================
+   SENIOR-specific — large, warm, high contrast
+   ============================================================ */
+body[data-age="senior"] .card{border-width:1.5px}
+body[data-age="senior"] .btn{padding:1rem 1.6rem;font-size:1.05rem}
+body[data-age="senior"] .input,body[data-age="senior"] .textarea{padding:1.1rem 1.2rem;font-size:1.05rem}
+body[data-age="senior"] .sec-head h2{font-size:clamp(1.8rem,3.2vw,2.4rem)}
+body[data-age="senior"] .breath-orb{width:200px;height:200px}
+body[data-age="senior"] .breath-phase{font-size:1.5rem}
+body[data-age="senior"] .mood-tile{padding:1.4rem .6rem}
+body[data-age="senior"] .mood-tile .face{font-size:2.4rem}
+body[data-age="senior"] .mood-tile .label{font-size:.9rem}
+body[data-age="senior"] .scale button{height:58px;font-size:1.1rem}
+body[data-age="senior"] .track-card{padding:1.8rem 1.2rem}
+
+/* ============================================================
+   footer
+   ============================================================ */
+footer{border-top:1px solid var(--line);margin-top:3rem}
+.foot{max-width:1180px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem;font-size:.88rem;color:var(--ink-soft)}
+@media(max-width:780px){.foot{grid-template-columns:1fr}}
+.foot h4{font-family:var(--font-display);color:var(--ink);font-size:1rem;margin-bottom:.7rem}
+.foot a{text-decoration:none;color:inherit;display:block;padding:.3rem 0;transition:.2s}
+.foot a:hover{color:var(--secondary)}
+.foot .legal{font-size:.78rem;line-height:1.5}
+
+/* reduced motion */
+@media(prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
+  html{scroll-behavior:auto}
+}
+
+/* small svg icons */
+.icon{width:1.1em;height:1.1em;display:inline-block;vertical-align:-.15em}
+
+/* ============================================================
+   LOCAL HELP — location-aware resources
+   ============================================================ */
+.local-help-btn{border:1.5px solid var(--ink);color:var(--ink);background:transparent;border-radius:999px;padding:.5rem 1rem;font-weight:600;font-size:.85rem;display:flex;align-items:center;gap:.4rem;transition:.2s}
+.local-help-btn:hover{background:var(--ink);color:var(--bg)}
+.local-help-card{background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft))}
+body[data-age="teen"] .local-help-card{background:linear-gradient(135deg,rgba(127,90,240,.18),rgba(44,182,125,.12))}
+.local-flag{font-size:2rem;line-height:1}
+.local-status{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--ink-soft);background:var(--surface);padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line)}
+.local-status.detecting{color:var(--secondary)}
+.local-status .dot{width:8px;height:8px;border-radius:50%;background:var(--secondary);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+.local-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.resource-group{margin-top:1.4rem}
+.resource-group h4{font-family:var(--font-display);font-size:1.1rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.resource-list{display:flex;flex-direction:column;gap:.5rem}
+.resource-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:.85rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.resource-item .name{font-weight:600;font-size:.95rem;line-height:1.3}
+.resource-item .note{font-size:.78rem;color:var(--ink-soft);margin-top:.15rem}
+.resource-item .contact{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--secondary);text-align:right;white-space:nowrap}
+.resource-item .hours{font-size:.72rem;color:var(--ink-soft);text-align:right;text-transform:uppercase;letter-spacing:.04em;margin-top:.1rem}
+.resource-item a.call{display:inline-flex;align-items:center;gap:.3rem;text-decoration:none;color:inherit;border:1.5px solid var(--secondary);border-radius:999px;padding:.3rem .8rem;font-size:.8rem;font-weight:600;margin-top:.3rem;transition:.2s}
+.resource-item a.call:hover{background:var(--secondary);color:var(--on-secondary)}
+.find-help-link{display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:var(--bg);padding:.55rem 1rem;border-radius:999px;font-size:.88rem;font-weight:600;text-decoration:none;transition:.2s;margin-top:.5rem}
+.find-help-link:hover{transform:translateY(-2px);background:var(--secondary)}
+.country-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin:1rem 0;max-height:340px;overflow-y:auto;padding-right:.4rem}
+.country-picker button{border:1.5px solid var(--line);background:var(--surface);border-radius:var(--radius);padding:.6rem .8rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-size:.88rem;transition:.2s;text-align:left;font-family:inherit;color:var(--ink)}
+.country-picker button:hover{border-color:var(--primary);background:var(--primary-soft)}
+.country-picker button.cur{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.geo-prompt{display:flex;align-items:center;gap:.8rem;background:var(--surface);border:1.5px dashed var(--line);border-radius:var(--radius);padding:1rem;margin-top:1rem}
+.geo-prompt .icon-wrap{width:42px;height:42px;border-radius:12px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.geo-prompt p{font-size:.9rem;color:var(--ink-soft);line-height:1.4}
+.geo-prompt strong{color:var(--ink)}
+.local-help-card .privacy-note{font-size:.78rem;color:var(--ink-soft);margin-top:1rem;line-height:1.5;padding-top:1rem;border-top:1px dashed var(--line);display:flex;gap:.5rem}
+.manual-entry-row{display:flex;gap:.5rem;margin-top:.7rem}
+.manual-entry-row input{flex:1}
+@media(max-width:780px){
+  .local-help-btn span.label{display:none}
+  .local-help-btn{padding:.5rem .7rem}
+  .resource-item{flex-direction:column;align-items:flex-start;gap:.4rem}
+  .resource-item .contact{text-align:left}
+}
+</style>
+</head>
+<body data-age="adult">
+
+<!-- Site-wide wellness notice (dismissible) -->
+<div id="siteNotice" style="background:var(--accent-soft);border-bottom:1px solid var(--line);font-size:.78rem;color:var(--ink-soft);text-align:center;padding:.5rem 1rem;display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap">
+  <span>⚠️ Mindhaus is a self-guided wellness companion, <strong style="color:var(--ink)">not</strong> a medical service. In an emergency call <strong style="color:var(--ink)">911</strong> (US), <strong style="color:var(--ink)">999</strong> (UK), <strong style="color:var(--ink)">112</strong> (EU), <strong style="color:var(--ink)">000</strong> (AU).</span>
+  <button id="siteNoticeClose" style="background:transparent;border:0;cursor:pointer;color:var(--ink-soft);font-size:1rem;padding:0 .4rem" aria-label="Dismiss">×</button>
+</div>
+
+<header>
+  <div class="nav">
+    <a href="#/" class="brand" aria-label="Mindhaus home">
+      <span class="brand-dot" aria-hidden="true"></span>
+      Mindhaus
+    </a>
+    <div class="age-switch" id="ageSwitch" role="tablist" aria-label="Choose age experience">
+      <button data-age="kid" role="tab"><span class="label">Kid</span> <span aria-hidden="true">🐻</span></button>
+      <button data-age="teen" role="tab"><span class="label">Teen</span> <span aria-hidden="true">🧭</span></button>
+      <button data-age="adult" role="tab" class="on" aria-selected="true"><span class="label">Adult</span> <span aria-hidden="true">🍃</span></button>
+      <button data-age="senior" role="tab"><span class="label">Senior</span> <span aria-hidden="true">🏡</span></button>
+    </div>
+    <button class="local-help-btn" id="localHelpBtn" aria-label="Find local mental health resources">
+      <span aria-hidden="true">📍</span><span class="label">Local help</span>
+    </button>
+    <button class="crisis-btn" id="crisisBtn" aria-label="Open crisis resources">
+      <span aria-hidden="true">♥</span><span class="label">I'm in crisis</span>
+    </button>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<!-- Crisis modal -->
+<div class="modal-bg" id="crisisModal" role="dialog" aria-modal="true" aria-labelledby="crisisTitle">
+  <div class="modal modal-wrap">
+    <button class="close" id="crisisClose" aria-label="Close">×</button>
+    <h2 id="crisisTitle">You don't have to face this alone.</h2>
+    <p class="muted">If you are in immediate danger, <strong>call your local emergency number now</strong> (911 in the US, 999 in the UK, 112 in the EU, 000 in Australia). The lines below are free, confidential, and available around the clock, but they are operated by independent third parties — not by Mindhaus or T. O. Randhir.</p>
+    <div class="crisis-list">
+      <div class="crisis-item">
+        <div><div class="name">988 Suicide &amp; Crisis Lifeline (US)</div><div class="hours">24/7 · Free · Confidential</div></div>
+        <div><div class="num">988</div><div style="font-size:.78rem" class="muted">call or text</div></div>
+      </div>
+      <div class="crisis-item">
+        <div><div class="name">Crisis Text Line (US/UK/Canada)</div><div class="hours">24/7 · Text-based</div></div>
+        <div><div class="num" style="font-size:1rem">HOME to 741741</div></div>
+      </div>
+      <div class="crisis-item">
+        <div><div class="name">Samaritans (UK &amp; ROI)</div><div class="hours">24/7 · Free</div></div>
+        <div><div class="num">116 123</div></div>
+      </div>
+      <div class="crisis-item">
+        <div><div class="name">Lifeline (Australia)</div><div class="hours">24/7</div></div>
+        <div><div class="num">13 11 14</div></div>
+      </div>
+      <div class="crisis-item">
+        <div><div class="name">iCall (India)</div><div class="hours">Mon–Sat · multilingual</div></div>
+        <div><div class="num">9152987821</div></div>
+      </div>
+      <div class="crisis-item">
+        <div><div class="name">Find a helpline worldwide</div><div class="hours">International directory</div></div>
+        <div><a href="https://findahelpline.com" target="_blank" rel="noopener" class="btn sm primary">Visit site →</a></div>
+      </div>
+    </div>
+    <p class="disclaimer">Mindhaus is a self-guided companion for everyday wellbeing. It is not a medical service and does not provide diagnosis, treatment, or crisis intervention. If you're experiencing a mental health emergency, contact a professional or someone you trust right away.</p>
+  </div>
+</div>
+
+<!-- Local help modal -->
+<div class="modal-bg" id="localHelpModal" role="dialog" aria-modal="true" aria-labelledby="localHelpTitle">
+  <div class="modal modal-wrap" id="localHelpContent"></div>
+</div>
+
+<!-- Legal & Disclaimers modal -->
+<div class="modal-bg" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="modal modal-wrap" id="legalContent" style="max-width:680px">
+    <button class="close" id="legalClose" aria-label="Close">×</button>
+    <h2 id="legalTitle">Legal &amp; Disclaimers</h2>
+    <p class="muted" style="font-size:.85rem">Last updated: September 2026</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">© 2026 T. O. Randhir. All rights reserved.</h3>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus, its design, code, illustrations, curated resource data, and written content are the intellectual property of <strong>T. O. Randhir</strong> unless otherwise noted. You may use this app for personal, non-commercial purposes. You may not reproduce, redistribute, sell, or create derivative works without written permission.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">1. Not medical advice</h3>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus is a self-guided companion for everyday mental wellbeing. It is <strong>not</strong> a medical service and does not provide medical or psychiatric diagnosis, treatment, therapy, clinical assessment, crisis intervention, or professional mental health care of any kind.</p>
+    <p style="font-size:.92rem;line-height:1.6">The tools, exercises, reflections, prompts, and information in this app are for general educational and wellness purposes only. They are not a substitute for advice from a qualified healthcare provider. Always seek the advice of a licensed mental health professional with any questions you may have regarding a mental health condition. Never disregard professional advice or delay in seeking it because of something you read or used in this app. If you think you may have a mental health condition, please consult a qualified professional.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">2. Not for emergencies</h3>
+    <p style="font-size:.92rem;line-height:1.6">If you are experiencing a medical or psychiatric emergency, or you are in immediate danger, do not rely on this app. Call your local emergency number directly:</p>
+    <ul style="font-size:.92rem;line-height:1.7;margin:.5rem 0 .5rem 1.4rem">
+      <li><strong>United States:</strong> 911</li>
+      <li><strong>United Kingdom:</strong> 999</li>
+      <li><strong>European Union:</strong> 112</li>
+      <li><strong>Australia:</strong> 000</li>
+      <li><strong>India:</strong> 112</li>
+      <li><strong>Canada:</strong> 911</li>
+    </ul>
+    <p style="font-size:.92rem;line-height:1.6">Or go to the nearest emergency room. If you are having thoughts of harming yourself or others, contact a crisis line or emergency service directly — the resources surfaced by Mindhaus are operated by independent third parties and are not monitored by Mindhaus or T. O. Randhir.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">3. Third-party crisis &amp; local resources</h3>
+    <p style="font-size:.92rem;line-height:1.6">The phone numbers, websites, and organizations listed in this app — including but not limited to 988, Crisis Text Line, Samaritans, Lifeline, Vandrevala Foundation, findahelpline.com, and others — are operated by independent third parties. Mindhaus does not operate, endorse, control, monitor, or guarantee the availability, accuracy, or quality of these services.</p>
+    <p style="font-size:.92rem;line-height:1.6">Phone numbers, hours of operation, websites, and policies may change without notice. Always verify directly with the service before relying on it. Mindhaus and T. O. Randhir are not responsible for the actions, advice, or omissions of any third-party service; for any harm arising from contact with a third-party service; for the content of any linked third-party website; or for the unavailability of any listed resource. The list of resources is provided in good faith from publicly available information at the time of writing, but should not be considered exhaustive or definitive.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">4. No warranty</h3>
+    <p style="font-size:.92rem;line-height:1.6">This app is provided <strong>"as is" and "as available"</strong> without any warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, non-infringement, or accuracy of information.</p>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus does not warrant that the app will be uninterrupted, secure, or error-free; that any tool, exercise, or reflection will produce any particular outcome; or that any information provided is accurate, current, or complete. You use this app entirely at your own risk.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">5. Limitation of liability</h3>
+    <p style="font-size:.92rem;line-height:1.6">To the fullest extent permitted by law, T. O. Randhir and any contributors, affiliates, or service providers shall not be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages, including but not limited to loss of data, loss of goodwill, emotional distress, personal injury, or any other damages arising from or related to your use of, or inability to use, this app.</p>
+    <p style="font-size:.92rem;line-height:1.6">This applies whether the damages arise from breach of contract, tort (including negligence), statute, or otherwise — even if T. O. Randhir has been advised of the possibility of such damages. Some jurisdictions do not allow the limitation of certain damages; in those places, this limitation applies to the maximum extent permitted by applicable law.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">6. Children's use (under 13)</h3>
+    <p style="font-size:.92rem;line-height:1.6">The "Kid" experience is designed for children roughly 6–12 years old and is intended for use <strong>with a parent, guardian, teacher, or other trusted adult present</strong>. By allowing a child to use this experience, you acknowledge that you are the child's parent, guardian, or responsible adult; that you have reviewed the app and the resources it surfaces; that you understand the app stores reflections, mood logs, and entries in the browser's local storage on the device being used; and that you consent to this use on the child's behalf.</p>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus does not knowingly collect personal information from children under 13. All data is stored locally in your browser and never sent to a server. You can clear a child's data at any time using the "Reset all my data" link in the footer.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">7. Privacy</h3>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus runs entirely in your browser. Everything you write — mood logs, journal entries, reflections, thought records, treasured memories — is stored in your browser's local storage on the device you are using. Nothing is transmitted to a server. No analytics, tracking, advertising, or third-party services are loaded that collect your data.</p>
+    <p style="font-size:.92rem;line-height:1.6">The one exception is the optional "Use my location" feature in the Local help section, which — only when you tap it — sends your device's coordinates to OpenStreetMap (Nominatim) to identify your country. Coordinates are not stored; only the country code is remembered on your device.</p>
+    <p style="font-size:.92rem;line-height:1.6">You can clear all your data at any time via "Reset all my data" in the footer.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">8. Changes to these terms</h3>
+    <p style="font-size:.92rem;line-height:1.6">These terms may be updated from time to time. The "last updated" date above reflects the most recent change. Continued use of Mindhaus after a change indicates your acceptance of the updated terms.</p>
+
+    <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">9. Acknowledgments &amp; contact</h3>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus is a personal project by <strong>T. O. Randhir</strong>, Department of Environmental Conservation, University of Massachusetts Amherst. The curated resource data is drawn from publicly available sources at the time of writing. Tools and exercises are adapted from evidence-based practices in cognitive behavioral therapy (Beck, 1979), behavioral activation (Jacobson, 1996), acceptance and commitment therapy (Hayes, 1999), positive psychology (Seligman, 2005), and traditional breathwork and grounding techniques.</p>
+    <p style="font-size:.92rem;line-height:1.6">For questions about these terms, contact T. O. Randhir through <a href="https://ecowaters.com" target="_blank" rel="noopener" style="color:var(--secondary)">ecowaters.com</a>.</p>
+
+    <p style="font-size:.82rem;color:var(--ink-soft);margin-top:2rem;padding-top:1.2rem;border-top:1px dashed var(--line);line-height:1.5">By using Mindhaus, you acknowledge that you have read and understood these disclaimers, and that you accept the app as a self-guided wellness companion and not as a substitute for professional care.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="foot">
+    <div>
+      <h4>Mindhaus</h4>
+      <p class="legal">A private space for your mind, designed to grow with you from age 6 to 106. Everything you write stays on this device. Nothing is sent to a server.</p>
+      <p class="legal" style="margin-top:.8rem"><strong style="color:var(--ink)">© 2026 T. O. Randhir.</strong> All rights reserved.</p>
+    </div>
+    <div>
+      <h4>Switch experience</h4>
+      <a href="#/" data-age="kid">Kid (6–12)</a>
+      <a href="#/" data-age="teen">Teen (13–19)</a>
+      <a href="#/" data-age="adult">Adult (20–64)</a>
+      <a href="#/" data-age="senior">Senior (65+)</a>
+    </div>
+    <div>
+      <h4>About &amp; legal</h4>
+      <a href="#" id="aboutLegal">Legal &amp; disclaimers</a>
+      <a href="#" id="aboutPrivacy">Privacy promise</a>
+      <a href="#" id="aboutScience">What's the evidence</a>
+      <a href="https://ecowaters.com" target="_blank" rel="noopener">Made by T. O. Randhir</a>
+      <a href="#" id="aboutReset" style="color:var(--danger)">Reset all my data</a>
+    </div>
+  </div>
+  <div class="foot" style="border-top:1px solid var(--line);padding-top:1rem;margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.78rem;color:var(--ink-soft)">
+    <div>Mindhaus is a self-guided wellness companion. It is <strong>not</strong> a medical service and does not replace professional care. If you are in immediate danger, call your local emergency number (911 in the US).</div>
+    <div>© 2026 T. O. Randhir · <a href="#" id="aboutLegal2" style="color:inherit;text-decoration:underline">Legal &amp; disclaimers</a></div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   STATE + STORAGE
+   ============================================================ */
+const STORAGE_KEY = 'mindhaus:state:v1';
+
+const defaultState = {
+  age: 'adult',
+  data: {
+    kid:    { moods: [], worries: [], breaths: 0, streak: 0, lastCheckin: null, garden: [] },
+    teen:   { moods: [], thoughts: [], vents: [], breath: 0, energy: [] },
+    adult:  { checkins: [], thoughts: [], gratitudes: [], activations: [], values: [], worry: [], breath: 0 },
+    senior: { treasured: [], connections: [], pleasures: [], rest: [], breath: 0, reflections: [] }
+  },
+  settings: { reducedMotion: false }
+};
+
+let state = loadState();
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return structuredClone(defaultState);
+    const parsed = JSON.parse(raw);
+    // shallow merge so new fields added later don't break older saves
+    return {
+      age: parsed.age || 'adult',
+      data: { ...structuredClone(defaultState.data), ...(parsed.data || {}) },
+      settings: { ...defaultState.settings, ...(parsed.settings || {}) }
+    };
+  }catch(e){ return structuredClone(defaultState); }
+}
+function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+
+function setAge(age){
+  if(!['kid','teen','adult','senior'].includes(age)) return;
+  state.age = age;
+  document.body.dataset.age = age;
+  document.querySelectorAll('#ageSwitch button').forEach(b=>{
+    const on = b.dataset.age === age;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  saveState();
+  render();
+}
+
+function todayKey(d=new Date()){
+  return d.toISOString().slice(0,10);
+}
+
+/* ============================================================
+   LOCAL HELP — curated resources + geolocation
+   ============================================================ */
+// Each entry: crisis (24/7 emergency), general (info/referral/warm line),
+// teen/kid/senior (age-specific), and findHelp (authoritative directory URL).
+// Numbers verified against public sources at time of writing; if unsure, use
+// findHelp link as the authoritative fallback.
+const RESOURCES = {
+  US: { name:'United States', flag:'🇺🇸', region:'Americas',
+    crisis:[
+      {name:'988 Suicide & Crisis Lifeline', contact:'988', tel:'988', hours:'24/7', note:'Call or text. Free, confidential.'},
+      {name:'Crisis Text Line', contact:'Text HOME to 741741', sms:'741741', hours:'24/7', note:'Text-based support.'},
+      {name:'Veterans Crisis Line', contact:'988, then 1', tel:'988', hours:'24/7', note:'Veterans, service members, families.'},
+      {name:'The Trevor Project (LGBTQ+ youth)', contact:'1-866-488-7386', tel:'18664887386', hours:'24/7', note:'Also text 678-678 or chat online.'},
+      {name:'Trans Lifeline', contact:'1-877-565-8860', tel:'18775658860', hours:'24/7', note:'By and for trans people.'}
+    ],
+    teen:[
+      {name:'Teen Line', contact:'1-800-852-8336', tel:'18008528336', hours:'6–10pm PT', note:'Teens helping teens. Text 839863.'},
+      {name:'NEDA Helpline (eating disorders)', contact:'1-800-931-2237', tel:'18009312237', hours:'M–Th 11am–9pm ET', note:'Support and resources.'}
+    ],
+    senior:[
+      {name:'Friendship Line (Institute on Aging)', contact:'1-888-670-1360', tel:'18886701360', hours:'24/7', note:'Free warm line for older adults.'},
+      {name:'Eldercare Locator', contact:'1-800-677-1116', tel:'18006771116', hours:'M–F 9am–8pm ET', note:'Local aging services, caregiver support.'}
+    ],
+    general:[
+      {name:'SAMHSA National Helpline', contact:'1-800-662-4357', tel:'18006624357', hours:'24/7', note:'Free, confidential treatment referral.'},
+      {name:'211', contact:'Dial 211', tel:'211', hours:'24/7', note:'Local social services, mental health, housing.'},
+      {name:'NAMI HelpLine', contact:'1-800-950-6264', tel:'18009506264', hours:'M–F 10am–10pm ET', note:'Education, referrals, peer support.'},
+      {name:'Psychology Today (therapist finder)', contact:'psychologytoday.com/therapists', url:'https://www.psychologytoday.com/us/therapists', note:'Search by location, insurance, specialty.'},
+      {name:'Open Path Collective', contact:'openpathcollective.org', url:'https://openpathcollective.org', note:'Therapy $30–$80/session.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  CA: { name:'Canada', flag:'🇨🇦', region:'Americas',
+    crisis:[
+      {name:'988 (Canada)', contact:'988', tel:'988', hours:'24/7', note:'Call or text. Bilingual EN/FR.'},
+      {name:'Talk Suicide Canada', contact:'1-833-456-4566', tel:'18334564566', hours:'24/7', note:'Or text 45645 (QC: 1-866-277-3553).'},
+      {name:'Kids Help Phone', contact:'1-800-668-6868', tel:'18006686868', hours:'24/7', note:'For youth. Text 686868.'}
+    ],
+    general:[
+      {name:'Wellness Together Canada', contact:'wellnesstogether.ca', url:'https://wellnesstogether.ca', hours:'24/7', note:'Free mental health & substance use support.'},
+      {name:'211', contact:'Dial 211', tel:'211', hours:'24/7', note:'Community & social services.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  MX: { name:'Mexico', flag:'🇲🇽', region:'Americas',
+    crisis:[
+      {name:'Línea de la Vida', contact:'800-911-2000', tel:'8009112000', hours:'24/7', note:'Free, confidential. Also 55-5259-8121 (CDMX).'},
+      {name:'SAPTEL', contact:'55-5259-8121', tel:'5552598121', hours:'24/7', note:'Apoyo emocional, CDMX.'}
+    ],
+    general:[
+      {name:'Red de Apoyo Emocional', contact:'sap.gob.mx', url:'https://www.gob.mx/salud', note:'Federal health resources.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  BR: { name:'Brazil', flag:'🇧🇷', region:'Americas',
+    crisis:[
+      {name:'CVV (Centro de Valorização da Vida)', contact:'188', tel:'188', hours:'24/7', note:'Free, confidential. Chat at cvv.org.br.'},
+      {name:'CAPS (SUS)', contact:'Disque 136', tel:'136', hours:'24/7', note:'Mental health referral via SUS.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  AR: { name:'Argentina', flag:'🇦🇷', region:'Americas',
+    crisis:[
+      {name:'Centro de Asistencia al Suicida', contact:'135', tel:'135', hours:'24/7', note:'Free, confidential (CABA).'},
+      {name:'Dirección de Salud Mental', contact:'0800-444-4000', tel:'08004444000', hours:'24/7', note:'National mental health line.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  CL: { name:'Chile', flag:'🇨🇱', region:'Americas',
+    crisis:[
+      {name:'Salud Responde', contact:'600 360 7777', tel:'6003607777', hours:'24/7', note:'Ministry of Health line.'},
+      {name:'Línea Libre', contact:'1515', tel:'1515', hours:'24/7', note:'Mental health crisis, family & gender violence.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  GB: { name:'United Kingdom', flag:'🇬🇧', region:'Europe',
+    crisis:[
+      {name:'Samaritans', contact:'116 123', tel:'116123', hours:'24/7', note:'Free, confidential. Also jo@samaritans.org.'},
+      {name:'Crisis Text Line UK', contact:'Text SHOUT to 85258', sms:'85258', hours:'24/7', note:'Text-based support.'},
+      {name:'NHS 111 (urgent mental health)', contact:'Dial 111', tel:'111', hours:'24/7', note:'Choose option 2 for mental health crisis.'}
+    ],
+    teen:[
+      {name:'Childline', contact:'0800 1111', tel:'08001111', hours:'24/7', note:'For under-19s. Free.'}
+    ],
+    general:[
+      {name:'Mind (info & support)', contact:'0300 123 3393', tel:'03001233393', hours:'M–F 9am–6pm', note:'Info, advice, local services.'},
+      {name:'NHS talking therapies (self-referral)', contact:'nhs.uk/mental-health', url:'https://www.nhs.uk/mental-health/', note:'Free CBT, counseling via GP or self-referral.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  IE: { name:'Ireland', flag:'🇮🇪', region:'Europe',
+    crisis:[
+      {name:'Samaritans (ROI)', contact:'116 123', tel:'116123', hours:'24/7', note:'Free from any phone.'},
+      {name:'Pieta House', contact:'1800 247 247', tel:'1800247247', hours:'24/7', note:'Suicide, self-harm, bereavement.'},
+      {name:'Childline', contact:'1800 66 66 66', tel:'1800666666', hours:'24/7', note:'For under-18s.'}
+    ],
+    general:[
+      {name:'HSE mental health services', contact:'hse.ie/mental-health', url:'https://www.hse.ie/mental-health/', note:'Public mental health supports.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  FR: { name:'France', flag:'🇫🇷', region:'Europe',
+    crisis:[
+      {name:'3114 (national suicide prevention)', contact:'3114', tel:'3114', hours:'24/7', note:'Free, confidential, multilingual.'},
+      {name:'Fil Santé Jeunes (12–25)', contact:'0 800 235 236', tel:'0800235236', hours:'9am–11pm', note:'Free for youth.'}
+    ],
+    general:[
+      {name:'PSY France (annuaire)', contact:'psyfrance.fr', url:'https://www.psyfrance.fr', note:'Find a psychologist.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  DE: { name:'Germany', flag:'🇩🇪', region:'Europe',
+    crisis:[
+      {name:'Telefonseelsorge', contact:'0800 111 0 111', tel:'08001110111', hours:'24/7', note:'Also 0800 111 0 222. Free, confidential.'},
+      {name:'Nummer gegen Kummer (youth)', contact:'116 111', tel:'116111', hours:'M–Sa 2–8pm', note:'For children & teens.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  ES: { name:'Spain', flag:'🇪🇸', region:'Europe',
+    crisis:[
+      {name:'024 (línea de atención a la conducta suicida)', contact:'024', tel:'024', hours:'24/7', note:'Free, confidential.'},
+      {name:'Teléfono de la Esperanza', contact:'717 003 717', tel:'717003717', hours:'24/7', note:'Also 900 100 535 for family.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  IT: { name:'Italy', flag:'🇮🇹', region:'Europe',
+    crisis:[
+      {name:'Telefono Amico Italia', contact:'02 2327 2327', tel:'0223272327', hours:'24/7', note:'Free.'},
+      {name:'Samaritans Onlus (in English)', contact:'800 86 00 22', tel:'800860022', hours:'M–F 13–22', note:'For English speakers in Italy.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  NL: { name:'Netherlands', flag:'🇳🇱', region:'Europe',
+    crisis:[
+      {name:'113 Zelfmoordpreventie', contact:'0900 0113', tel:'09000113', hours:'24/7', note:'Free. Also chat 113.nl.'},
+      {name:'De Luisterlijn', contact:'0900 0113', tel:'09000113', hours:'24/7', note:'For loneliness, mental wellbeing.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  BE: { name:'Belgium', flag:'🇧🇪', region:'Europe',
+    crisis:[
+      {name:'Centrum ter Preventie van Zelfdoding', contact:'0800 32 123', tel:'080032123', hours:'24/7', note:'Free.'},
+      {name:'Tele-Onthaal', contact:'106', tel:'106', hours:'24/7', note:'For all kinds of distress.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  SE: { name:'Sweden', flag:'🇸🇪', region:'Europe',
+    crisis:[
+      {name:'Mind Självmordslinjen', contact:'90101', tel:'90101', hours:'24/7', note:'Free.'},
+      {name:'BRIS (for under-18)', contact:'116 111', tel:'116111', hours:'24/7', note:'Free, confidential.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  NO: { name:'Norway', flag:'🇳🇴', region:'Europe',
+    crisis:[
+      {name:'Kirkens SOS', contact:'116 123', tel:'116123', hours:'24/7', note:'Free, multilingual.'},
+      {name:'Mental Helse Hjelpetelefonen', contact:'116 123', tel:'116123', hours:'24/7', note:'Mental health peer support.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  DK: { name:'Denmark', flag:'🇩🇰', region:'Europe',
+    crisis:[
+      {name:'Livslinien', contact:'70 20 12 01', tel:'70201201', hours:'24/7', note:'Free.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  FI: { name:'Finland', flag:'🇫🇮', region:'Europe',
+    crisis:[
+      {name:'MIELI Crisis Helpline', contact:'09 2525 0111', tel:'0925250111', hours:'24/7', note:'Free. Also English 09-2525 0112.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  AU: { name:'Australia', flag:'🇦🇺', region:'Asia-Pacific',
+    crisis:[
+      {name:'Lifeline', contact:'13 11 14', tel:'131114', hours:'24/7', note:'Free. Also text 0477 13 11 14 (6pm–midnight).'},
+      {name:'Beyond Blue', contact:'1300 22 4636', tel:'1300224636', hours:'24/7', note:'Anxiety, depression. Also chat.'},
+      {name:'13YARN (Indigenous)', contact:'13 92 76', tel:'139276', hours:'24/7', note:'For Aboriginal & Torres Strait Islander peoples.'}
+    ],
+    teen:[
+      {name:'Kids Helpline', contact:'1800 55 1800', tel:'1800551800', hours:'24/7', note:'For ages 5–25. Free.'}
+    ],
+    general:[
+      {name:'Head to Health', contact:'headtohealth.gov.au', url:'https://www.headtohealth.gov.au', note:'Find local mental health services.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  NZ: { name:'New Zealand', flag:'🇳🇿', region:'Asia-Pacific',
+    crisis:[
+      {name:'1737 (call or text)', contact:'1737', tel:'1737', hours:'24/7', note:'Free, confidential. Call or text.'},
+      {name:'Youthline', contact:'0800 376 633', tel:'0800376633', hours:'24/7', note:'For youth. Also text 234.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  IN: { name:'India', flag:'🇮🇳', region:'Asia-Pacific',
+    crisis:[
+      {name:'iCall', contact:'9152987821', tel:'9152987821', hours:'M–Sa 8am–10pm', note:'Multilingual. Also chat icallhelpline.org.'},
+      {name:'Vandrevala Foundation', contact:'1860-2662-345', tel:'18602662345', hours:'24/7', note:'Multilingual.'},
+      {name:'AASRA', contact:'9820466726', tel:'9820466726', hours:'24/7', note:'Suicide prevention.'}
+    ],
+    general:[
+      {name:'iFightDepression (India)', contact:'ifightdepression.com', url:'https://ifightdepression.com/en/india', note:'Online CBT self-help.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  PK: { name:'Pakistan', flag:'🇵🇰', region:'Asia-Pacific',
+    crisis:[
+      {name:'Umang Helpline', contact:'0317-4288665', tel:'03174288665', hours:'24/7', note:'Free mental health support.'},
+      {name:'Rozan Counseling', contact:'0800-22422', tel:'080022422', hours:'M–Sa 9am–5pm', note:'Also gender-based support.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  BD: { name:'Bangladesh', flag:'🇧🇩', region:'Asia-Pacific',
+    crisis:[
+      {name:'Kaan Pete Roi', contact:'09666-778800', tel:'09666778800', hours:'6pm–11pm', note:'Bengali & English.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  JP: { name:'Japan', flag:'🇯🇵', region:'Asia-Pacific',
+    crisis:[
+      {name:'よりそいホットライン (Yorisoi)', contact:'0120-279-338', tel:'0120279338', hours:'24/7', note:'Free, multilingual (EN/CN/KR/PT/ES/TH/VN/TL).'},
+      {name:'TELL (Tokyo English)', contact:'03-5774-0992', tel:'0357740992', hours:'9am–11pm', note:'English-language lifeline.'},
+      {name:'いのちの電話 (Inochi no Denwa)', contact:'0570-783-556', tel:'0570783556', hours:'4pm–9pm', note:'Japanese.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  KR: { name:'South Korea', flag:'🇰🇷', region:'Asia-Pacific',
+    crisis:[
+      {name:'정신건강위기상담전화', contact:'1577-0199', tel:'15770199', hours:'24/7', note:'Mental health crisis line.'},
+      {name:'자살예방상담전화', contact:'1393', tel:'1393', hours:'24/7', note:'Suicide prevention.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  CN: { name:'China', flag:'🇨🇳', region:'Asia-Pacific',
+    crisis:[
+      {name:'北京心理危机研究与干预中心', contact:'010-82951332', tel:'01082951332', hours:'24/7', note:'Beijing. Mandarin & English.'},
+      {name:'希望24热线', contact:'400-161-9995', tel:'4001619995', hours:'24/7', note:'Nationwide, Mandarin.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  PH: { name:'Philippines', flag:'🇵🇭', region:'Asia-Pacific',
+    crisis:[
+      {name:'988 (Hopeline)', contact:'988', tel:'988', hours:'24/7', note:'Free, confidential.'},
+      {name:'In Touch Community Services', contact:'(02) 8893-7603', tel:'0288937603', hours:'M–F 9am–5pm', note:'Crisis & family lines.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  ID: { name:'Indonesia', flag:'🇮🇩', region:'Asia-Pacific',
+    crisis:[
+      {name:'Into The Light Indonesia', contact:'119 ext 8', tel:'119', hours:'24/7', note:'National mental health line.'},
+      {name:'Sejiwa (Kemenkes)', contact:'119 ext 8', tel:'119', hours:'24/7', note:'Ministry of Health.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  MY: { name:'Malaysia', flag:'🇲🇾', region:'Asia-Pacific',
+    crisis:[
+      {name:'Befrienders KL', contact:'03-7956 8145', tel:'0379568145', hours:'24/7', note:'Free, confidential.'},
+      {name:'MIASA (Malaysian Mental Health Assoc.)', contact:'03-2780 6803', tel:'0327806803', hours:'M–F 9am–5pm', note:'Mental health info.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  TH: { name:'Thailand', flag:'🇹🇭', region:'Asia-Pacific',
+    crisis:[
+      {name:'Department of Mental Health Hotline', contact:'1323', tel:'1323', hours:'24/7', note:'Free, Thai & English.'},
+      {name:'Samaritans of Thailand', contact:'02-713-6793', tel:'027136793', hours:'24/7', note:'English-speaking.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  VN: { name:'Vietnam', flag:'🇻🇳', region:'Asia-Pacific',
+    crisis:[
+      {name:'National Mental Health Helpline', contact:'1800 1567', tel:'18001567', hours:'24/7', note:'Vietnamese.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  ZA: { name:'South Africa', flag:'🇿🇦', region:'Africa',
+    crisis:[
+      {name:'SADAG Mental Health Line', contact:'0800 456 789', tel:'0800456789', hours:'24/7', note:'Free. Also 0800 21 22 23.'},
+      {name:'Lifeline SA', contact:'0861 322 322', tel:'0861322322', hours:'24/7', note:'Crisis counseling.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  NG: { name:'Nigeria', flag:'🇳🇬', region:'Africa',
+    crisis:[
+      {name:'Lifeline Nigeria', contact:'0800 80 80 80 80', tel:'08080808080', hours:'M–F 9am–5pm', note:'Free, confidential.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  KE: { name:'Kenya', flag:'🇰🇪', region:'Africa',
+    crisis:[
+      {name:'Befriending Kenya', contact:'0800 723 253', tel:'0800723253', hours:'24/7', note:'Free (Safaricom).'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  IL: { name:'Israel', flag:'🇮🇱', region:'Middle East',
+    crisis:[
+      {name:'ERAN', contact:'1201', tel:'1201', hours:'24/7', note:'Free, multilingual.'},
+      {name:'Sahar (youth)', contact:'073-2000400', tel:'0732000400', hours:'M–Th 19–23', note:'For ages 12–25.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  TR: { name:'Turkey', flag:'🇹🇷', region:'Middle East',
+    crisis:[
+      {name:'ALO 182 (Ministry of Health)', contact:'182', tel:'182', hours:'24/7', note:'Turkish.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  },
+  AE: { name:'United Arab Emirates', flag:'🇦🇪', region:'Middle East',
+    crisis:[
+      {name:'Dubai Police (emergency)', contact:'999', tel:'999', hours:'24/7', note:'For immediate danger.'},
+      {name:'Mental Health Helpline (DHA)', contact:'800 4673', tel:'8004673', hours:'24/7', note:'Free, confidential.'}
+    ],
+    findHelp:'https://findahelpline.com/'
+  }
+};
+
+const COUNTRY_LIST = Object.keys(RESOURCES).map(k => ({code:k, ...RESOURCES[k]}));
+
+// Privacy: store only the country code (never coordinates)
+const LOCATION_KEY = 'mindhaus:location:v1';
+let _userLocation = null;
+function loadLocation(){
+  try { return JSON.parse(localStorage.getItem(LOCATION_KEY)) || null; } catch(e){ return null; }
+}
+function saveLocation(loc){
+  _userLocation = loc;
+  try { localStorage.setItem(LOCATION_KEY, JSON.stringify(loc)); } catch(e){}
+}
+function clearLocation(){
+  _userLocation = null;
+  try { localStorage.removeItem(LOCATION_KEY); } catch(e){}
+}
+
+function detectGeolocation(){
+  return new Promise(resolve => {
+    if(!('geolocation' in navigator)) return resolve({ok:false, reason:'unavailable'});
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ok:true, lat:pos.coords.latitude, lng:pos.coords.longitude}),
+      err => resolve({ok:false, reason:err.code===1?'denied':'unavailable'}),
+      {timeout:10000, maximumAge:3600000}
+    );
+  });
+}
+
+async function reverseGeocode(lat, lng){
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`, {
+      headers:{'Accept':'application/json'}
+    });
+    if(!res.ok) return null;
+    const data = await res.json();
+    return data.address?.country_code?.toUpperCase() || null;
+  } catch(e){ return null; }
+}
+
+async function autoDetectLocation(){
+  const result = await detectGeolocation();
+  if(!result.ok) return {ok:false, reason:result.reason};
+  const cc = await reverseGeocode(result.lat, result.lng);
+  if(!cc || !RESOURCES[cc]) return {ok:false, reason:'unknown'};
+  saveLocation({country:cc, source:'geo', ts:Date.now()});
+  return {ok:true, country:cc, source:'geo'};
+}
+
+function setManualLocation(cc){
+  if(!RESOURCES[cc]) return;
+  saveLocation({country:cc, source:'manual', ts:Date.now()});
+}
+
+function getResourceFor(track, countryCode){
+  const data = RESOURCES[countryCode] || RESOURCES.US;
+  const out = { name:data.name, flag:data.flag, crisis:data.crisis || [] };
+  if(track === 'kid'){
+    out.teen = data.teen || []; // kids usually have parent/teacher-mediated access to similar lines
+    out.general = [];
+  } else if(track === 'teen'){
+    out.teen = data.teen || [];
+    out.general = data.general ? data.general.slice(0,3) : [];
+  } else if(track === 'adult'){
+    out.general = data.general || [];
+  } else if(track === 'senior'){
+    out.senior = data.senior || [];
+    out.general = data.general ? data.general.slice(0,3) : [];
+  }
+  out.findHelp = data.findHelp;
+  return out;
+}
+
+function trackCopy(track){
+  const c = {
+    kid: {
+      title:'Find a grown-up to help',
+      lede:'If a feeling is too big, there are people whose whole job is to help kids. You can ask a parent or teacher to call these for you.',
+      callCta:'Ask a grown-up to call',
+      crisisTitle:'For grown-ups worried about a child'
+    },
+    teen: {
+      title:'Real help, near you',
+      lede:'You don\'t have to handle it alone. These are free, confidential, and most text or chat too.',
+      callCta:'Tap to call or text',
+      crisisTitle:'If you\'re in crisis right now'
+    },
+    adult: {
+      title:'Mental health resources near you',
+      lede:'Free, confidential lines and local-finding tools. If you\'re in immediate danger, call your local emergency number.',
+      callCta:'Call or text',
+      crisisTitle:'24/7 crisis support'
+    },
+    senior: {
+      title:'People who can help, close to home',
+      lede:'A trusted voice on the other end of the line. All of these are free and confidential.',
+      callCta:'Tap to call',
+      crisisTitle:'24/7 support lines'
+    }
+  };
+  return c[track];
+}
+
+function resourceItem(r){
+  const contactWrap = h('div',{style:'text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:.3rem'});
+  contactWrap.append(h('div',{class:'contact'}, r.contact));
+  if(r.hours) contactWrap.append(h('div',{class:'hours'}, r.hours));
+  const callLink = r.tel ? h('a',{class:'call', href:'tel:'+r.tel}, '📞 '+ (r.tel === r.contact ? 'Call' : 'Call')) :
+                  r.sms ? h('a',{class:'call', href:'sms:'+r.sms}, '💬 Text') :
+                  r.url ? h('a',{class:'call', href:r.url, target:'_blank', rel:'noopener'}, '↗ Open') : null;
+  if(callLink) contactWrap.append(callLink);
+  return h('div',{class:'resource-item'},
+    h('div',{},
+      h('div',{class:'name'}, r.name),
+      r.note ? h('div',{class:'note'}, r.note) : null
+    ),
+    contactWrap
+  );
+}
+
+function buildLocalHelpSection(track, opts={}){
+  const copy = trackCopy(track);
+  const card = h('section',{class:'card local-help-card', id: opts.id || 'local-help'},
+    h('div',{class:'sec-head'},
+      h('div',{},
+        h('h2',{}, copy.title),
+        h('p',{class:'sub', style:'max-width:36rem'}, copy.lede)
+      ),
+      _userLocation ? h('span',{class:'local-status'}, h('span',{class:'dot'}), '📍 ' + RESOURCES[_userLocation.country].flag + ' ' + RESOURCES[_userLocation.country].name)
+                    : h('span',{class:'local-status'}, '🌍 Set your location')
+    )
+  );
+
+  if(!_userLocation){
+    // First-time: prompt to detect or pick
+    const prompt = h('div',{class:'geo-prompt'},
+      h('div',{class:'icon-wrap'}, '📍'),
+      h('div',{style:'flex:1'},
+        h('p',{}, h('strong',{},'Use my location?'), ' We can show resources for your country. ', h('strong',{},'Your coordinates are never saved'), ' — only the country.'),
+        h('div',{class:'row', style:'margin-top:.6rem'},
+          h('button',{class:'btn primary sm', onclick:async ()=>{
+            prompt.querySelector('p').innerHTML = '<strong>Detecting your country…</strong>';
+            const r = await autoDetectLocation();
+            if(r.ok){ toast('Showing ' + RESOURCES[r.country].name); }
+            else { toast('Couldn\'t detect — pick your country below.'); }
+            render(); if(opts.inModal) openLocalHelpModal();
+          }}, 'Use my location'),
+          h('button',{class:'btn ghost sm', onclick:()=>{ card.querySelector('.manual-entry').style.display='block'; }}, 'Pick a country')
+        )
+      )
+    );
+    card.append(prompt);
+
+    // Manual country picker
+    const manual = h('div',{class:'manual-entry', style:'display:none;margin-top:1.2rem'},
+      h('h4',{style:'font-family:var(--font-display);font-size:1.05rem;margin-bottom:.4rem'},'Or pick your country'),
+      h('div',{class:'country-picker'},
+        ...COUNTRY_LIST.map(c =>
+          h('button',{onclick:()=>{ setManualLocation(c.code); toast('Showing ' + c.name); render(); if(opts.inModal) openLocalHelpModal(); }},
+            h('span',{style:'font-size:1.1rem'}, c.flag), c.name
+          )
+        )
+      )
+    );
+    card.append(manual);
+  } else {
+    // Show resources for selected country
+    const r = getResourceFor(track, _userLocation.country);
+    const cCode = _userLocation.country;
+
+    // Crisis
+    if(r.crisis && r.crisis.length){
+      card.append(h('div',{class:'resource-group'},
+        h('h4',{}, '🆘 ' + copy.crisisTitle),
+        h('div',{class:'resource-list'}, ...r.crisis.map(resourceItem))
+      ));
+    }
+
+    // Track-specific
+    if(track === 'teen' && r.teen && r.teen.length){
+      card.append(h('div',{class:'resource-group'},
+        h('h4',{},'🧒 Support just for teens'),
+        h('div',{class:'resource-list'}, ...r.teen.map(resourceItem))
+      ));
+    }
+    if(track === 'senior' && r.senior && r.senior.length){
+      card.append(h('div',{class:'resource-group'},
+        h('h4',{},'🌿 Support for older adults'),
+        h('div',{class:'resource-list'}, ...r.senior.map(resourceItem))
+      ));
+    }
+    if(track === 'kid'){
+      card.append(h('div',{style:'margin-top:1.2rem;padding:1rem;background:var(--surface);border-radius:var(--radius);border:1.5px dashed var(--line)'},
+        h('p',{class:'muted', style:'font-size:.95rem;line-height:1.5'},'💛 ',h('strong',{},'You don\'t have to call these yourself.'),' A parent, teacher, school counselor, doctor, or any grown-up you trust can reach out. Telling one grown-up is brave.'),
+        h('div',{style:'margin-top:1rem'},
+          h('a',{href:r.findHelp, target:'_blank', rel:'noopener', class:'find-help-link'}, '↗ More help for kids & families')
+        )
+      ));
+    }
+
+    // General
+    if(r.general && r.general.length){
+      card.append(h('div',{class:'resource-group'},
+        h('h4',{},'📋 Information & referral'),
+        h('div',{class:'resource-list'}, ...r.general.map(resourceItem))
+      ));
+    }
+
+    // findHelp link + change
+    card.append(h('div',{class:'local-actions'},
+      h('a',{href:r.findHelp, target:'_blank', rel:'noopener', class:'find-help-link'}, '↗ Find more help'),
+      h('button',{class:'btn ghost sm', onclick:()=>{
+        if(confirm('Clear saved country? You can set it again any time.')){
+          clearLocation();
+          render();
+          if(opts.inModal) openLocalHelpModal();
+        }
+      }}, 'Change country')
+    ));
+
+    // Privacy note
+    card.append(h('div',{class:'privacy-note'},
+      h('span',{style:'flex-shrink:0'},'🔒'),
+      h('span',{},'Location privacy: we store only your country code. Coordinates are sent once to OpenStreetMap to identify your country and are never saved. Switch country any time.')
+    ));
+
+    // Third-party services notice
+    card.append(h('div',{style:'font-size:.8rem;color:var(--ink-soft);margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--line);line-height:1.5'},
+      '⚠️ The resources above are operated by independent third parties. Mindhaus and T. O. Randhir do not operate, endorse, or guarantee these services. Numbers and hours may change — verify before relying on them. For an emergency, call 911 (US), 999 (UK), 112 (EU), or your local emergency number. See the full ',
+      h('a',{href:'#', onclick:(e)=>{e.preventDefault(); $('#legalModal').classList.add('open');}, style:'color:var(--secondary);text-decoration:underline'}, 'Legal & Disclaimers'),
+      '.'
+    ));
+  }
+  return card;
+}
+
+function openLocalHelpModal(){
+  const content = $('#localHelpContent');
+  content.innerHTML = '';
+  content.append(h('button',{class:'close', onclick:()=>$('#localHelpModal').classList.remove('open')}, '×'));
+  content.append(buildLocalHelpSection(state.age, {inModal:true, id:'modal-local'}));
+  $('#localHelpModal').classList.add('open');
+}
+
+/* ============================================================
+   small DOM helpers
+   ============================================================ */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+const h = (tag, attrs={}, ...kids) => {
+  const el = document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k === 'class') el.className = v;
+    else if(k === 'html') el.innerHTML = v;
+    else if(k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else if(k === 'dataset') Object.assign(el.dataset, v);
+    else if(v !== false && v != null) el.setAttribute(k, v);
+  }
+  for(const kid of kids.flat()){
+    if(kid == null || kid === false) continue;
+    el.append(kid.nodeType ? kid : document.createTextNode(kid));
+  }
+  return el;
+};
+const svg = (d, size=18) => `<svg class="icon" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+const iconHeart = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>';
+const iconArrow = '<path d="M5 12h14M13 5l7 7-7 7"/>';
+const iconCheck = '<path d="M20 6 9 17l-5-5"/>';
+const iconSpark = '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>';
+const iconWind = '<path d="M9.59 4.59A2 2 0 1 1 11 8H2M17.73 2.27A2.5 2.5 0 1 1 19.5 6.5H2M12 12a3 3 0 1 1 6 0 3 3 0 0 1-6 0z"/>';
+
+function toast(msg, iconPath=iconCheck){
+  const t = $('#toast');
+  t.innerHTML = `${svg(iconPath,16)} <span>${msg}</span>`;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+const app = $('#app');
+function render(){
+  app.innerHTML = '';
+  const view = location.hash.replace('#/','') || 'home';
+  const tracks = { kid: renderKid, teen: renderTeen, adult: renderAdult, senior: renderSenior };
+  const root = tracks[state.age]();
+  app.append(root);
+  window.scrollTo({top:0,behavior:'instant'});
+}
+window.addEventListener('hashchange', render);
+
+/* ============================================================
+   KID TRACK — Brave Buddies (6–12)
+   ============================================================ */
+function renderKid(){
+  const root = h('div');
+  const moods = [
+    {e:'😄', l:'Great!'},
+    {e:'🙂', l:'Okay'},
+    {e:'😐', l:'Meh'},
+    {e:'😟', l:'Worried'},
+    {e:'😢', l:'Sad'}
+  ];
+  const buddies = [
+    {n:'Ollie the Owl', e:'🦉', q:'"Whoo\'s brave today? You are!"'},
+    {n:'Benny Bear', e:'🐻', q:'"A hug from me to you, friend."'},
+    {n:'Pippa Fox', e:'🦊', q:'"Try something new — I dare you!"'},
+    {n:'Tilly Turtle', e:'🐢', q:'"Slow breaths, slow smiles."'}
+  ];
+  const today = state.data.kid.moods.find(m => m.date === todayKey());
+
+  // HERO
+  const hero = h('section', {class:'hero'},
+    h('div',{},
+      h('div',{class:'eyebrow'},'🌈 Your brave space'),
+      h('h1',{}, 'Hi friend! How is your ', h('em',{}, 'heart'), ' today?'),
+      h('p',{class:'lede'},'Brave Buddies are here to help you check in, breathe, and feel a little better. Let\'s pick how you feel right now!'),
+      h('div',{class:'hero-actions'},
+        h('a',{href:'#mood', class:'btn primary lg'}, svg(iconHeart,18)+' How I feel'),
+        h('a',{href:'#breathe', class:'btn ghost lg'}, svg(iconWind,18)+' Brave breath')
+      )
+    ),
+    h('div',{class:'card', style:'text-align:center;background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft))'},
+      h('div',{style:'font-size:5rem;line-height:1;margin:.5rem 0'}, '🐻'),
+      h('div',{class:'display', style:'font-size:1.5rem'},'Brave Buddies'),
+      h('p',{class:'muted', style:'font-size:.92rem;margin-top:.5rem'}, buddies[Math.floor(Date.now()/86400000) % buddies.length].q)
+    )
+  );
+  root.append(hero);
+
+  // MOOD CHECK-IN
+  const moodTiles = moods.map(m =>
+    h('button',{
+      class:'mood-tile'+(today && today.face === m.e ? ' sel' : ''),
+      onclick:()=>{
+        const existing = state.data.kid.moods.find(x => x.date === todayKey());
+        if(existing){ existing.face = m.e; existing.label = m.l; }
+        else state.data.kid.moods.push({date:todayKey(), face:m.e, label:m.l, ts:Date.now()});
+        saveState(); updateStreak();
+        toast('Awesome! You told me how you feel.');
+        render();
+      }
+    }, h('div',{class:'face'},m.e), h('div',{class:'label'},m.l))
+  );
+  const moodCard = h('section',{id:'mood', class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'How is your heart today?'),
+      h('span',{class:'tag'},'Tap your feeling')
+    ),
+    h('div',{class:'mood-grid'}, ...moodTiles)
+  );
+  root.append(moodCard);
+
+  // STREAK
+  const streakCard = h('section',{class:'card', style:'text-align:center;background:var(--accent-soft)'},
+    h('div',{class:'display', style:'font-size:1.4rem'},`⭐ Your Brave Streak: ${state.data.kid.streak} ${state.data.kid.streak===1?'day':'days'}!`),
+    h('p',{class:'muted', style:'margin-top:.4rem'},'Check in every day to grow your stars.'),
+    h('div',{class:'kid-streak', id:'streakRow'},
+      ...Array.from({length:7}, (_,i)=>{
+        const on = i < Math.min(state.data.kid.streak, 7);
+        return h('div',{class:'streak-star'+(on?' on':'')}, on ? '⭐' : '·');
+      })
+    )
+  );
+  root.append(streakCard);
+
+  // BREATH
+  root.append(breathCard({
+    title:'Brave Breathing',
+    pattern:[4,4,4,4], // box breath
+    inhale:'Breathe in… like a big balloon!',
+    holdIn:'Hold it…',
+    exhale:'Breathe out… slow as a turtle.',
+    holdOut:'Rest…',
+    color:'#FF6B6B',
+    id:'breathe'
+  }));
+
+  // WORRY CLOUD
+  const worryCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'☁️ Worry Cloud'),
+      h('span',{class:'tag'},'Tell it, then let it float away')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Type a worry and watch it turn into a soft cloud that floats away.'),
+    h('div',{class:'field'},
+      h('textarea',{class:'textarea', id:'kidWorry', placeholder:'My worry is…', maxlength:200})
+    ),
+    h('button',{class:'btn primary lg', onclick:()=>{
+      const t = $('#kidWorry', app).value.trim();
+      if(!t){ toast('Type your worry first.'); return; }
+      state.data.kid.worries.push({text:t, ts:Date.now()});
+      saveState();
+      $('#kidWorry', app).value = '';
+      toast('Your worry floated away! 🌥️');
+      renderWorryCloud();
+    }}, svg(iconWind,18)+' Send it to the sky'),
+    h('div',{id:'kidWorryCloud', style:'position:relative;min-height:90px;margin-top:1rem;overflow:hidden;border-radius:var(--radius);background:linear-gradient(180deg,#E3F2FD,#FFF8E7);padding:1rem'},
+      h('div',{class:'empty'},'Your cloud garden is clear. ☀️')
+    )
+  );
+  root.append(worryCard);
+  setTimeout(renderWorryCloud, 0);
+
+  // 5 SENSES
+  root.append(fiveSensesCard('kid'));
+
+  // KINDNESS GARDEN
+  const gardenItems = state.data.kid.garden.slice().reverse().slice(0,8).map(g =>
+    h('div',{class:'list-item', style:'background:var(--primary-soft)'},
+      h('div',{}, '🌱 ' + g.text),
+      h('span',{class:'when'}, relTime(g.ts))
+    )
+  );
+  const gardenCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🌻 Kindness Garden'),
+      h('span',{class:'tag'},'Plant a seed of kindness')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Did you do something kind today? Plant a seed! You can water the garden by being kind again tomorrow.'),
+    h('div',{class:'field'},
+      h('input',{class:'input', id:'kidKind', placeholder:'I was kind when I…'})
+    ),
+    h('button',{class:'btn primary lg', onclick:()=>{
+      const t = $('#kidKind', app).value.trim();
+      if(!t){ toast('Tell me what you did!'); return; }
+      state.data.kid.garden.push({text:t, ts:Date.now()});
+      saveState();
+      $('#kidKind', app).value = '';
+      toast('Seed planted! 🌱');
+      render();
+    }}, svg(iconSpark,18)+' Plant a seed'),
+    h('div',{class:'list', style:'margin-top:1rem'},
+      gardenItems.length ? gardenItems : h('div',{class:'empty'},'Your garden is waiting for its first seed. 🌷')
+    )
+  );
+  root.append(gardenCard);
+
+  // BUDDY ROTATION
+  const buddyCard = h('section',{class:'card', style:'background:linear-gradient(135deg,var(--secondary-soft),var(--primary-soft))'},
+    h('h2',{style:'margin-bottom:1rem'},'Meet the Brave Buddies'),
+    h('div',{class:'grid-2'},
+      ...buddies.map(b =>
+        h('div',{class:'card lift', style:'text-align:center'},
+          h('div',{style:'font-size:3rem'}, b.e),
+          h('div',{class:'display', style:'font-size:1.2rem;margin-top:.4rem'}, b.n),
+          h('p',{class:'muted', style:'font-style:italic;margin-top:.5rem;font-size:.95rem'}, b.q)
+        )
+      )
+    )
+  );
+  root.append(buddyCard);
+
+  // Local help
+  root.append(buildLocalHelpSection('kid'));
+
+  return root;
+}
+
+function renderWorryCloud(){
+  const cloud = $('#kidWorryCloud', app);
+  if(!cloud) return;
+  const list = state.data.kid.worries.slice(-8);
+  if(!list.length){
+    cloud.innerHTML = '<div class="empty">Your cloud garden is clear. ☀️</div>';
+    return;
+  }
+  cloud.innerHTML = '';
+  list.forEach((w,i)=>{
+    const c = h('div',{
+      style:`position:absolute;bottom:${Math.random()*60+10}px;left:${(i*13 + Math.random()*15)}%;background:#fff;border-radius:60px;padding:.4rem .9rem;font-size:.82rem;color:#4A6FA5;box-shadow:0 4px 12px -4px rgba(74,111,165,.3);animation:floatUp 4s ease-in forwards;animation-delay:${i*0.4}s;max-width:140px;text-align:center;`
+    }, '☁️ ' + w.text);
+    cloud.append(c);
+  });
+}
+
+function updateStreak(){
+  const last = state.data.kid.lastCheckin;
+  const today = todayKey();
+  if(last === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  state.data.kid.streak = last === yesterday ? (state.data.kid.streak + 1) : 1;
+  state.data.kid.lastCheckin = today;
+  saveState();
+}
+
+/* ============================================================
+   TEEN TRACK — Inner Compass (13–19)
+   ============================================================ */
+function renderTeen(){
+  const root = h('div');
+  const moods = [
+    {e:'🔥', l:'On fire', v:5, c:'#FF8906'},
+    {e:'😊', l:'Good', v:4, c:'#2CB67D'},
+    {e:'😐', l:'Meh', v:3, c:'#7F5AF0'},
+    {e:'😔', l:'Down', v:2, c:'#5A5A8A'},
+    {e:'😣', l:'Stressed', v:1, c:'#E53170'}
+  ];
+  const today = state.data.teen.moods.find(m => m.date === todayKey());
+  const tags = ['school','friends','family','body','future','self','sleep','screens'];
+
+  // HERO
+  root.append(h('section',{class:'hero'},
+    h('div',{},
+      h('div',{class:'eyebrow'},'🧭 Real talk, real tools'),
+      h('h1',{}, 'Your feelings are ', h('em',{},'valid'), '. Let\'s work with them.'),
+      h('p',{class:'lede'},'A private space to log what\'s going on, unpack a thought, breathe, and find a way through. No judgment. No data leaves this device.'),
+      h('div',{class:'hero-actions'},
+        h('a',{href:'#checkin', class:'btn primary lg'}, 'Quick check-in'),
+        h('a',{href:'#unpack', class:'btn secondary lg'}, 'Unpack a thought')
+      )
+    ),
+    h('div',{class:'card', style:'text-align:center;background:linear-gradient(135deg,#2D2752,#1B3A2E);color:#FFFFFE'},
+      h('div',{style:'font-size:4rem;line-height:1'},'🧭'),
+      h('div',{class:'display', style:'font-size:1.4rem;margin-top:.4rem'},'Inner Compass'),
+      h('p',{style:'opacity:.7;font-size:.92rem;margin-top:.5rem;color:#94A1B2'},'You\'re allowed to feel this.')
+    )
+  ));
+
+  // CHECK-IN
+  const moodTiles = moods.map(m =>
+    h('button',{
+      class:'mood-tile'+(today && today.v === m.v ? ' sel' : ''),
+      onclick:()=>{
+        const existing = state.data.teen.moods.find(x => x.date === todayKey());
+        if(existing){ existing.v = m.v; existing.label = m.l; existing.face = m.e; }
+        else state.data.teen.moods.push({date:todayKey(), v:m.v, label:m.l, face:m.e, tags:existing?.tags || [], ts:Date.now()});
+        saveState();
+        toast('Logged. You showed up today.');
+        render();
+      }
+    }, h('div',{class:'face'},m.e), h('div',{class:'label'},m.l))
+  );
+  const tagEls = tags.map(t => h('button',{
+    class:'teen-tag'+(today?.tags?.includes(t)?' sel':''),
+    onclick:(e)=>{
+      const existing = state.data.teen.moods.find(x => x.date === todayKey()) || (state.data.teen.moods.push({date:todayKey(),v:3,label:'Meh',face:'😐',tags:[],ts:Date.now()}), state.data.teen.moods.at(-1));
+      const i = existing.tags.indexOf(t);
+      i>=0 ? existing.tags.splice(i,1) : existing.tags.push(t);
+      saveState();
+      e.currentTarget.classList.toggle('sel');
+    }
+  }, '#' + t));
+  const checkinCard = h('section',{id:'checkin', class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'How are you, really?'),
+      h('span',{class:'tag'},'Daily check-in')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Pick the face that fits. Then add tags so you can spot what affects you most.'),
+    h('div',{class:'mood-grid'}, ...moodTiles),
+    h('div',{class:'teen-tag-row'}, ...tagEls)
+  );
+  root.append(checkinCard);
+
+  // CHART
+  const chartCard = moodChartCard(state.data.teen.moods.slice(-14), 5, 'teen');
+  root.append(chartCard);
+
+  // THOUGHT UNPACKER
+  root.append(thoughtUnpackerCard());
+
+  // BOX BREATH
+  root.append(breathCard({
+    title:'Box Breathing',
+    pattern:[4,4,4,4],
+    inhale:'Inhale 4',
+    holdIn:'Hold 4',
+    exhale:'Exhale 4',
+    holdOut:'Hold 4',
+    color:'#7F5AF0',
+    id:'breathe'
+  }));
+
+  // ENERGY CHECK
+  root.append(energyCard());
+
+  // GROUNDING MENU
+  root.append(groundingMenu());
+
+  // VENT PAD
+  root.append(ventCard());
+
+  // Local help
+  root.append(buildLocalHelpSection('teen'));
+
+  return root;
+}
+
+function thoughtUnpackerCard(){
+  const card = h('section',{id:'unpack', class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Unpack a thought'),
+      h('span',{class:'tag'},'CBT · 3 steps')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Catch a thought. Check the evidence. Write a fairer version. This is one of the most-used tools in therapy.'),
+    h('div',{class:'field'},
+      h('label',{},'1. The thought (write it like it sounds in your head)'),
+      h('textarea',{class:'textarea', id:'tThought', placeholder:'"I\'m going to fail the test and everyone will think I\'m stupid."'})
+    ),
+    h('div',{class:'field'},
+      h('label',{},'2. Evidence for it / against it'),
+      h('textarea',{class:'textarea', id:'tEvidence', placeholder:'For: I didn\'t study much. Against: I\'ve passed every test this year.'})
+    ),
+    h('div',{class:'field'},
+      h('label',{},'3. A kinder, truer version'),
+      h('textarea',{class:'textarea', id:'tBalanced', placeholder:'"I\'m nervous about this test, but one test doesn\'t define me. I can study more and ask for help."'})
+    ),
+    h('button',{class:'btn primary lg', onclick:()=>{
+      const thought = $('#tThought', app).value.trim();
+      const evidence = $('#tEvidence', app).value.trim();
+      const balanced = $('#tBalanced', app).value.trim();
+      if(!thought || !balanced){ toast('Fill at least the thought and a balanced version.'); return; }
+      state.data.teen.thoughts.push({thought, evidence, balanced, ts:Date.now()});
+      saveState();
+      ['tThought','tEvidence','tBalanced'].forEach(id => $('#'+id, app).value = '');
+      toast('Saved. You\'re doing the work.');
+      render();
+    }}, svg(iconCheck,18)+' Save this unpacking'),
+    h('div',{class:'list', style:'margin-top:1.2rem'},
+      ...(state.data.teen.thoughts.slice().reverse().slice(0,5).map(t =>
+        h('div',{class:'list-item'},
+          h('div',{}, h('strong',{}, '“'+t.thought+'”')),
+          h('div',{class:'muted', style:'margin-top:.5rem;font-size:.92rem'}, 'Balanced: '+t.balanced),
+          h('span',{class:'when'}, relTime(t.ts)),
+          h('button',{class:'del', onclick:()=>{state.data.teen.thoughts = state.data.teen.thoughts.filter(x=>x!==t); saveState(); render();}, 'aria-label':'Delete'}, '×')
+        )
+      )) || [h('div',{class:'empty'},'No thoughts unpacked yet.')]
+    )
+  );
+  return card;
+}
+
+function energyCard(){
+  const card = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Energy check'),
+      h('span',{class:'tag'},'Sleep · screens · move')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Quick read on the basics. You don\'t have to be perfect — just notice.'),
+    h('div',{class:'grid-3'},
+      energyRow('Sleep last night', 'sleep'),
+      energyRow('Screens today', 'screens'),
+      energyRow('Movement today', 'move')
+    ),
+    h('p',{class:'muted', style:'marginTop:'+1+'rem;font-size:.85rem', id:'energyMsg'},
+      energyMessage(state.data.teen.energy)
+    )
+  );
+  return card;
+}
+function energyRow(label, key){
+  const cur = state.data.teen.energy.find(e => e.date === todayKey()) || {};
+  const val = cur[key] ?? 0;
+  return h('div',{},
+    h('div',{style:'font-weight:600;margin-bottom:.4rem'},label),
+    h('div',{class:'scale'},
+      ...[1,2,3,4,5].map(n =>
+        h('button',{class:val===n?'sel':'', onclick:()=>{
+          let e = state.data.teen.energy.find(x => x.date === todayKey());
+          if(!e){ e = {date:todayKey()}; state.data.teen.energy.push(e); }
+          e[key] = n; saveState(); render();
+        }}, String(n))
+      )
+    )
+  );
+}
+function energyMessage(e){
+  const today = e.find(x => x.date === todayKey());
+  if(!today) return 'Pick a number for each — even a guess is useful.';
+  const total = (today.sleep||0) + (today.move||0) - (today.screens>3?1:0);
+  if(total >= 8) return 'Your body\'s been looked after. That\'ll help your mood.';
+  if(total >= 5) return 'Solid baseline. Small tweaks can still help.';
+  return 'A walk, water, or earlier bedtime could lift tomorrow. Pick one.';
+}
+
+function groundingMenu(){
+  const items = [
+    {n:'5-4-3-2-1', d:'See 5, touch 4, hear 3, smell 2, taste 1.', a:()=>openGrounding('5-4-3-2-1')},
+    {n:'Ice cube', d:'Hold one. Notice the cold. It brings you back fast.', a:()=>toast('Grab an ice cube from the freezer and hold it for 30 seconds.')},
+    {n:'Name it to tame it', d:'Name the emotion out loud. Naming shrinks it.', a:()=>toast('Try: "I notice I\'m feeling ___."')},
+    {n:'Cold water on face', d:'Triggers the dive reflex — calms the heart quickly.', a:()=>toast('Run cold water on your wrists and the back of your neck for 30 seconds.')},
+    {n:'Wall push', d:'Push against a wall hard for 10 seconds. Body resets.', a:()=>toast('Find a wall. Push as hard as you can for 10 seconds.')},
+    {n:'Listen out loud', d:'Name every sound you can hear for one minute.', a:()=>toast('Set a 1-min timer. List every sound. You\'ll be back.')}
+  ];
+  return h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Quick grounding'),
+      h('span',{class:'tag'},'When your head is loud')
+    ),
+    h('div',{class:'grid-2'},
+      ...items.map(it => h('div',{class:'card lift', onclick:it.a, style:'cursor:pointer'},
+        h('h3',{style:'font-size:1.15rem;margin-bottom:.4rem'},it.n),
+        h('p',{class:'muted', style:'font-size:.92rem'},it.d)
+      ))
+    )
+  );
+}
+
+function openGrounding(kind){
+  const steps = [
+    {n:'5', s:'See', d:'Name 5 things you can see right now.'},
+    {n:'4', s:'Touch', d:'Name 4 things you can feel — textures, temperatures.'},
+    {n:'3', s:'Hear', d:'Name 3 sounds, near or far.'},
+    {n:'2', s:'Smell', d:'Name 2 scents in the air.'},
+    {n:'1', s:'Taste', d:'Name 1 taste in your mouth right now.'}
+  ];
+  let step = 0;
+  const modal = h('div',{class:'modal-bg open', onclick:(e)=>{ if(e.target===modal) close(); }},
+    h('div',{class:'modal'},
+      h('h2',{},'5-4-3-2-1 grounding'),
+      h('p',{class:'muted'},'Go at your pace. There\'s no rush.'),
+      h('div',{id:'gStep', style:'margin:1.2rem 0;text-align:center'},
+        h('div',{class:'display', style:'font-size:4rem;line-height:1;color:var(--primary)'}, steps[0].n),
+        h('div',{class:'display', style:'font-size:1.5rem;margin-top:.5rem'}, steps[0].s),
+        h('p',{class:'muted', style:'margin-top:1rem;font-size:1.05rem'}, steps[0].d),
+        h('input',{class:'input', id:'gInput', placeholder:'Type what you notice…', style:'margin-top:1rem'})
+      ),
+      h('div',{class:'row between', style:'margin-top:1rem'},
+        h('div',{class:'muted', id:'gProg'}, `Step ${step+1} of ${steps.length}`),
+        h('div',{class:'row'},
+          h('button',{class:'btn ghost', onclick:()=>{ if(step>0){step--; update();} }}, 'Back'),
+          h('button',{class:'btn primary', id:'gNext', onclick:()=>{
+            if(step < steps.length-1){ step++; update(); }
+            else { close(); toast('Back to now. Nicely done.'); }
+          }}, step < steps.length-1 ? 'Next' : 'Finish')
+        )
+      )
+    )
+  );
+  function update(){
+    const s = steps[step];
+    const cont = $('#gStep', modal);
+    cont.innerHTML = '';
+    cont.append(h('div',{class:'display', style:'font-size:4rem;line-height:1;color:var(--primary)'}, s.n));
+    cont.append(h('div',{class:'display', style:'font-size:1.5rem;margin-top:.5rem'}, s.s));
+    cont.append(h('p',{class:'muted', style:'margin-top:1rem;font-size:1.05rem'}, s.d));
+    cont.append(h('input',{class:'input', id:'gInput', placeholder:'Type what you notice…', style:'margin-top:1rem'}));
+    $('#gProg', modal).textContent = `Step ${step+1} of ${steps.length}`;
+  }
+  function close(){ modal.remove(); }
+  document.body.append(modal);
+}
+
+function ventCard(){
+  return h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🔥 Vent pad'),
+      h('span',{class:'tag'},'Type. Release. Gone.')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'A place to dump what\'s in your head. It\'s not saved — it disappears the moment you click "release."'),
+    h('textarea',{class:'textarea', id:'ventText', placeholder:'Just let it out…', style:'min-height:160px'}),
+    h('div',{class:'row', style:'margin-top:1rem'},
+      h('button',{class:'btn secondary lg', onclick:()=>{
+        const t = $('#ventText', app).value.trim();
+        if(!t){ toast('Nothing to release yet.'); return; }
+        $('#ventText', app).value = '';
+        toast('Released. Take a breath.');
+      }}, '🔥 Release it')
+    )
+  );
+}
+
+/* ============================================================
+   ADULT TRACK — Stillwater (20–64)
+   ============================================================ */
+function renderAdult(){
+  const root = h('div');
+
+  // HERO
+  root.append(h('section',{class:'hero'},
+    h('div',{},
+      h('div',{class:'eyebrow'},'a small practice for a steadier day'),
+      h('h1',{}, 'Still the noise. ', h('em',{},'Notice'), ' yourself.'),
+      h('p',{class:'lede'},'Evidence-based tools from cognitive behavioral therapy, ACT, and mindfulness — distilled into five-minute practices you can use today.'),
+      h('div',{class:'hero-actions'},
+        h('a',{href:'#checkin', class:'btn primary lg'}, 'Daily check-in'),
+        h('a',{href:'#tools', class:'btn ghost lg'}, 'See all tools')
+      )
+    ),
+    h('div',{class:'card', style:'text-align:center;background:linear-gradient(135deg,var(--primary-soft),var(--secondary-soft))'},
+      h('div',{style:'font-size:3.5rem;line-height:1'},'🍃'),
+      h('div',{class:'display', style:'font-size:1.4rem;margin-top:.4rem'},'Stillwater'),
+      h('p',{class:'muted', style:'margin-top:.5rem;font-size:.92rem'},'You don\'t have to fix everything today.')
+    )
+  ));
+
+  // DAILY CHECK-IN
+  const today = state.data.adult.checkins.find(c => c.date === todayKey());
+  const checkinCard = h('section',{id:'checkin', class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Daily check-in'),
+      h('span',{class:'tag'},'Two minutes')
+    ),
+    h('div',{class:'field'},
+      h('label',{},'Mood (1 low – 10 high)'),
+      h('div',{class:'scale', id:'moodScale'},
+        ...[1,2,3,4,5,6,7,8,9,10].map(n =>
+          h('button',{class:(today?.mood===n?'sel':''), onclick:()=>{ setCheck('mood', n); }}, String(n))
+        )
+      )
+    ),
+    h('div',{class:'field'},
+      h('label',{},'Energy (1 drained – 10 strong)'),
+      h('div',{class:'scale'},
+        ...[1,2,3,4,5,6,7,8,9,10].map(n =>
+          h('button',{class:(today?.energy===n?'sel':''), onclick:()=>{ setCheck('energy', n); }}, String(n))
+        )
+      )
+    ),
+    h('div',{class:'field'},
+      h('label',{},'Sleep last night (hours)'),
+      h('div',{class:'scale'},
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12].map(n =>
+          h('button',{class:(today?.sleep===n?'sel':''), onclick:()=>{ setCheck('sleep', n); }}, String(n))
+        )
+      )
+    ),
+    h('div',{class:'field'},
+      h('label',{},'One word for today (optional)'),
+      h('input',{class:'input', value: today?.word || '', placeholder:'e.g. "scattered", "hopeful", "tender"', oninput:(e)=>{ setCheck('word', e.target.value, false); }})
+    ),
+    h('div',{class:'field'},
+      h('label',{},'A short note for future-you (optional)'),
+      h('textarea',{class:'textarea', value: today?.note || '', placeholder:'Anything you want to remember…', oninput:(e)=>{ setCheck('note', e.target.value, false); }})
+    )
+  );
+  function setCheck(field, val, rerender=true){
+    let c = state.data.adult.checkins.find(x => x.date === todayKey());
+    if(!c){ c = {date:todayKey(), ts:Date.now()}; state.data.adult.checkins.push(c); }
+    c[field] = val;
+    saveState();
+    if(rerender) render();
+    else toast('Saved');
+  }
+  root.append(checkinCard);
+
+  // CHART
+  root.append(moodChartCard(state.data.adult.checkins.slice(-14).map(c => ({date:c.date, v:c.mood||0})), 10, 'adult'));
+
+  // TOOLS
+  root.append(h('section',{id:'tools'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Practices, in five minutes or less'),
+      h('span',{class:'tag'},'CBT · ACT · mindfulness')
+    ),
+    h('div',{class:'grid-3'},
+      toolCard('📝','Thought record','Catch a thought, check the evidence, write a balanced version.','var(--sage-deep)', thoughtRecordCard),
+      toolCard('🎯','Behavioral activation','Schedule one small meaningful action for today.','var(--terra)', activationCard),
+      toolCard('✨','Three good things','Write down three things that went well, and why.','var(--bloom)', gratitudeCard),
+      toolCard('🧭','Values compass','Rate what matters most — and where you\'re honoring it.','var(--primary)', valuesCard),
+      toolCard('⏰','Worry time','Schedule 15 minutes to worry — and park it the rest of the day.','var(--secondary)', worryTimeCard),
+      toolCard('🌬️','Breath library','4-7-8, box, coherent, alternate nostril.','var(--accent)', breathLibraryCard)
+    )
+  ));
+
+  // BREATH (default)
+  root.append(breathCard({
+    title:'Box breathing',
+    pattern:[4,4,4,4],
+    inhale:'Inhale 4',
+    holdIn:'Hold 4',
+    exhale:'Exhale 4',
+    holdOut:'Hold 4',
+    color:'#5C6B52',
+    id:'breathe'
+  }));
+
+  // Local help
+  root.append(buildLocalHelpSection('adult'));
+
+  return root;
+}
+
+function toolCard(emoji, title, sub, color, onClick){
+  return h('div',{class:'card lift', onclick:onClick, style:'cursor:pointer'},
+    h('div',{style:`width:48px;height:48px;border-radius:14px;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem`}, emoji),
+    h('h3',{style:'font-size:1.2rem;margin-bottom:.3rem'}, title),
+    h('p',{class:'muted', style:'font-size:.92rem'}, sub)
+  );
+}
+
+function thoughtRecordCard(){
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'📝 Thought record'),
+      h('p',{class:'muted'},'A core CBT exercise. The form autosaves locally.'),
+      h('div',{class:'field'},
+        h('label',{},'Situation (what happened)'),
+        h('input',{class:'input', id:'trSit', placeholder:'e.g. "boss emailed at 10pm"'}),
+      ),
+      h('div',{class:'field'},
+        h('label',{},'Automatic thought'),
+        h('textarea',{class:'textarea', id:'trAt', placeholder:'"She\'s going to fire me. I\'m a failure."'}),
+      ),
+      h('div',{class:'grid-2'},
+        h('div',{class:'field'}, h('label',{},'Emotion (and intensity 0–100)'),
+          h('input',{class:'input', id:'trEm', placeholder:'anxious, 80'})),
+        h('div',{class:'field'}, h('label',{},'Belief in thought (0–100)'),
+          h('input',{class:'input', id:'trBel', placeholder:'75'})),
+      ),
+      h('div',{class:'field'},
+        h('label',{},'Evidence for / against'),
+        h('textarea',{class:'textarea', id:'trEv', placeholder:'For: she never emails late. Against: she often sends at odd hours.'})
+      ),
+      h('div',{class:'field'},
+        h('label',{},'Balanced thought'),
+        h('textarea',{class:'textarea', id:'trBal', placeholder:'"It\'s one email at 10pm. It might just be urgent, not personal."'})
+      ),
+      h('div',{class:'row', style:'justify-content:flex-end;margin-top:.5rem'},
+        h('button',{class:'btn primary', onclick:()=>{
+          const r = {
+            sit: $('#trSit',modal).value, at: $('#trAt',modal).value,
+            em: $('#trEm',modal).value, bel: $('#trBel',modal).value,
+            ev: $('#trEv',modal).value, bal: $('#trBal',modal).value,
+            ts: Date.now()
+          };
+          if(!r.at || !r.bal){ toast('Fill at least the thought and a balanced version.'); return; }
+          state.data.adult.thoughts.push(r); saveState();
+          modal.remove(); toast('Saved.');
+        }}, 'Save record')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+
+function activationCard(){
+  const today = state.data.adult.activations.find(a => a.date === todayKey());
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'🎯 One small action'),
+      h('p',{class:'muted'},'When mood is low, action comes first — motivation follows. Pick something small, specific, and pleasant or meaningful.'),
+      h('div',{class:'field'},
+        h('label',{},'Today\'s action'),
+        h('input',{class:'input', id:'actText', value: today?.text || '', placeholder:'e.g. "Walk around the block after lunch"'}),
+      ),
+      h('div',{class:'field'},
+        h('label',{},'When will you do it?'),
+        h('input',{class:'input', id:'actWhen', value: today?.when || '', placeholder:'e.g. "12:30pm"'}),
+      ),
+      h('div',{class:'field'},
+        h('label',{},'What value does this connect to?'),
+        h('select',{class:'select', id:'actVal'},
+          h('option',{value:''},'— pick one —'),
+          ...['Health','Family','Friends','Work','Learning','Creativity','Rest','Community','Play'].map(v => h('option',{value:v, selected:(today?.val===v)}, v))
+        )
+      ),
+      h('div',{class:'row', style:'justify-content:flex-end'},
+        h('button',{class:'btn primary', onclick:()=>{
+          const text = $('#actText',modal).value.trim();
+          if(!text){ toast('Pick something — even tiny counts.'); return; }
+          const when = $('#actWhen',modal).value;
+          const val = $('#actVal',modal).value;
+          if(today){ today.text=text; today.when=when; today.val=val; }
+          else state.data.adult.activations.push({date:todayKey(), text, when, val, ts:Date.now()});
+          saveState(); modal.remove(); toast('Action set. Go do it.');
+        }}, 'Save')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+
+function gratitudeCard(){
+  const today = state.data.adult.gratitudes.find(g => g.date === todayKey());
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'✨ Three good things'),
+      h('p',{class:'muted'},'A 5-minute practice linked to lasting increases in wellbeing (Seligman, 2005).'),
+      ...[1,2,3].map(n => h('div',{class:'field'},
+        h('label',{},`Good thing #${n}`),
+        h('input',{class:'input', id:`g${n}`, value: today?.[`g${n}`] || '', placeholder:n===1?'e.g. "Morning coffee in the sun"':n===2?'e.g. "Finished a hard task"':'e.g. "A friend texted me back"'}),
+        h('input',{class:'input', id:`gw${n}`, value: today?.[`gw${n}`] || '', placeholder:'Why was it good? (optional)', style:'margin-top:.4rem'})
+      )),
+      h('div',{class:'row', style:'justify-content:flex-end'},
+        h('button',{class:'btn primary', onclick:()=>{
+          const r = {date:todayKey(), ts:Date.now()};
+          [1,2,3].forEach(n => { r[`g${n}`] = $(`#g${n}`,modal).value; r[`gw${n}`] = $(`#gw${n}`,modal).value; });
+          if(!r.g1 && !r.g2 && !r.g3){ toast('Write at least one.'); return; }
+          if(today) Object.assign(today, r); else state.data.adult.gratitudes.push(r);
+          saveState(); modal.remove(); toast('Saved. Notice the small good.');
+        }}, 'Save')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+
+function valuesCard(){
+  const values = ['Family','Friends','Health','Work','Learning','Creativity','Rest','Community','Play','Spirituality','Nature','Justice'];
+  const current = state.data.adult.values;
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'🧭 Values compass'),
+      h('p',{class:'muted'},'Rate importance (1–5), and how aligned your life is with it (1–5). The gap between the two is where to focus.'),
+      h('div',{style:'max-height:50vh;overflow-y:auto;padding-right:.5rem'},
+        ...values.map(v => {
+          const c = current.find(x => x.name === v) || {name:v, imp:0, align:0};
+          return h('div',{style:'display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:.7rem;align-items:center;padding:.6rem 0;border-bottom:1px dashed var(--line)'},
+            h('div',{style:'font-weight:600'}, v),
+            h('select',{class:'select', onchange:(e)=>{ c.imp = +e.target.value; saveState(); }},
+              h('option',{value:0, selected:c.imp===0}, 'Imp.'),
+              ...[1,2,3,4,5].map(n => h('option',{value:n, selected:c.imp===n}, n))
+            ),
+            h('select',{class:'select', onchange:(e)=>{ c.align = +e.target.value; saveState(); }},
+              h('option',{value:0, selected:c.align===0}, 'Align'),
+              ...[1,2,3,4,5].map(n => h('option',{value:n, selected:c.align===n}, n))
+            )
+          );
+        })
+      ),
+      h('div',{class:'row', style:'justify-content:flex-end;margin-top:1rem'},
+        h('button',{class:'btn primary', onclick:()=>{ state.data.adult.values = values.map(v => current.find(x => x.name === v) || {name:v,imp:0,align:0}); saveState(); modal.remove(); toast('Values updated.'); }}, 'Save')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+
+function worryTimeCard(){
+  const today = state.data.adult.worry.find(w => w.date === todayKey());
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'⏰ Schedule your worry'),
+      h('p',{class:'muted'},'Set a 15-minute window. When worries pop up outside it, write them down and postpone them to that window.'),
+      h('div',{class:'field'},
+        h('label',{},'Today\'s worry window'),
+        h('input',{class:'input', type:'time', id:'worryTime', value: today?.time || '18:00'}),
+      ),
+      h('div',{class:'field'},
+        h('label',{},'Worry to revisit (optional)'),
+        h('textarea',{class:'textarea', id:'worryText', value: today?.text || '', placeholder:'A worry to come back to…'})
+      ),
+      h('div',{class:'row', style:'justify-content:flex-end'},
+        h('button',{class:'btn primary', onclick:()=>{
+          const time = $('#worryTime',modal).value;
+          const text = $('#worryText',modal).value;
+          if(today){ today.time=time; today.text=text; }
+          else state.data.adult.worry.push({date:todayKey(), time, text, ts:Date.now()});
+          saveState(); modal.remove(); toast('Worry time set.');
+        }}, 'Save')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+
+function breathLibraryCard(){
+  const modal = h('div',{class:'modal-bg open'},
+    h('div',{class:'modal'},
+      h('button',{class:'close', onclick:()=>modal.remove()}, '×'),
+      h('h2',{},'🌬️ Breath library'),
+      h('p',{class:'muted'},'Pick a pattern. The orb guides you.'),
+      h('div',{class:'grid-2'},
+        breathPick('4-7-8', [4,7,8,0], 'Calming · best before sleep'),
+        breathPick('Box (4-4-4-4)', [4,4,4,4], 'Steady · focus'),
+        breathPick('Coherent (5-5)', [5,0,5,0], 'Heart-rate variability'),
+        breathPick('Alternate nostril', [4,4,4,4], 'Balancing · evening')
+      )
+    )
+  );
+  document.body.append(modal);
+}
+function breathPick(name, pat, desc){
+  return h('button',{class:'card lift', style:'text-align:left;cursor:pointer',
+    onclick:()=>{
+      document.querySelectorAll('.modal-bg').forEach(m=>m.remove());
+      app.append(breathCard({title:name, pattern:pat, inhale:'Inhale', holdIn:'Hold', exhale:'Exhale', holdOut:'Hold', color:'#5C6B52', id:'breathe'}));
+    }
+  },
+    h('h3',{style:'font-size:1.1rem'}, name),
+    h('p',{class:'muted', style:'font-size:.9rem'}, desc)
+  );
+}
+
+/* ============================================================
+   SENIOR TRACK — Hearthside (65+)
+   ============================================================ */
+function renderSenior(){
+  const root = h('div');
+  const reflections = [
+    'What is one small pleasure you noticed today?',
+    'Who are you grateful for right now, and why?',
+    'What did you do today that you\'re quietly proud of?',
+    'What is something beautiful you saw or heard today?',
+    'What is one thing you learned — about the world or yourself?',
+    'What kindness did you offer or receive today?',
+    'What is something you\'re looking forward to?',
+    'What is a memory that warmed you today?'
+  ];
+  const todayReflection = reflections[(Math.floor(Date.now()/86400000)) % reflections.length];
+
+  // HERO
+  root.append(h('section',{class:'hero'},
+    h('div',{},
+      h('div',{class:'eyebrow'},'A quiet space, all your own'),
+      h('h1',{}, 'Good day to you. ', h('em',{},'How is your heart'), ' today?'),
+      h('p',{class:'lede'},'Hearthside is a gentle place to reflect, breathe, remember, and stay connected. There\'s no rush here.'),
+      h('div',{class:'hero-actions'},
+        h('a',{href:'#reflect', class:'btn primary lg'}, 'Today\'s reflection'),
+        h('a',{href:'#breathe', class:'btn ghost lg'}, 'A gentle breath')
+      )
+    ),
+    h('div',{class:'card', style:'text-align:center;background:linear-gradient(135deg,var(--accent-soft),var(--secondary-soft))'},
+      h('div',{style:'font-size:3.5rem;line-height:1'},'🏡'),
+      h('div',{class:'display', style:'font-size:1.5rem;margin-top:.4rem'},'Hearthside'),
+      h('p',{class:'muted', style:'margin-top:.5rem;font-size:.95rem'},'Take your time. There\'s no wrong answer.')
+    )
+  ));
+
+  // REFLECTION
+  const today = state.data.senior.reflections.find(r => r.date === todayKey());
+  const reflectCard = h('section',{id:'reflect', class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'✨ Today\'s reflection'),
+      h('span',{class:'tag'},'One small thought')
+    ),
+    h('p',{class:'display', style:'font-size:1.4rem;font-style:italic;color:var(--ink-soft);text-align:center;margin:1rem 0 1.5rem'}, '“'+todayReflection+'”'),
+    h('div',{class:'field'},
+      h('label',{},'Your reflection (as much or as little as you like)'),
+      h('textarea',{class:'textarea', id:'seniorRefl', placeholder:'Type here…', style:'min-height:140px;font-size:1.1rem'})
+    ),
+    h('button',{class:'btn primary lg', onclick:()=>{
+      const t = $('#seniorRefl', app).value.trim();
+      if(!t){ toast('Even a sentence is enough.'); return; }
+      const existing = state.data.senior.reflections.find(r => r.date === todayKey());
+      const r = {date:todayKey(), prompt:todayReflection, text:t, ts:Date.now()};
+      if(existing) Object.assign(existing, r);
+      else state.data.senior.reflections.push(r);
+      saveState();
+      $('#seniorRefl', app).value = '';
+      toast('Saved. Thank you for sharing.');
+      render();
+    }}, svg(iconCheck,18)+' Save my reflection')
+  );
+  root.append(reflectCard);
+
+  // TREASURED MOMENTS
+  const treas = state.data.senior.treasured.slice().reverse().slice(0,8);
+  const treasCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'📖 Treasured moments'),
+      h('span',{class:'tag'},'A memory worth keeping')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'A log of the moments that have mattered — small and large. Yours to keep.'),
+    h('div',{class:'field'},
+      h('label',{},'A moment you want to remember'),
+      h('textarea',{class:'textarea', id:'trText', placeholder:'e.g. "The year the whole family was home for Christmas — 1994"', style:'min-height:80px'})
+    ),
+    h('div',{class:'row'},
+      h('div',{class:'field', style:'flex:1'},
+        h('label',{},'Year (optional)'),
+        h('input',{class:'input', id:'trYear', placeholder:'1994'})
+      ),
+      h('div',{style:'display:flex;align-items:flex-end'},
+        h('button',{class:'btn primary lg', onclick:()=>{
+          const t = $('#trText', app).value.trim();
+          if(!t){ toast('Write a sentence or two.'); return; }
+          const y = $('#trYear', app).value.trim();
+          state.data.senior.treasured.push({text:t, year:y, ts:Date.now()});
+          saveState(); render();
+          toast('Memory saved. 📖');
+        }}, svg(iconHeart,18)+' Add to memory book')
+      )
+    ),
+    h('div',{class:'list', style:'margin-top:1.2rem'},
+      treas.length ? treas.map(t =>
+        h('div',{class:'list-item', style:'background:var(--accent-soft)'},
+          h('div',{style:'font-size:1.1rem;line-height:1.5'}, t.text),
+          h('div',{class:'muted', style:'font-size:.85rem;margin-top:.4rem;font-style:italic'}, (t.year||'—') + ' · ' + relTime(t.ts)),
+          h('button',{class:'del', onclick:()=>{state.data.senior.treasured = state.data.senior.treasured.filter(x=>x!==t); saveState(); render();}, 'aria-label':'Delete'}, '×')
+        )
+      ) : h('div',{class:'empty'},'Your memory book is ready when you are.')
+    )
+  );
+  root.append(treasCard);
+
+  // GENTLE BREATH
+  root.append(breathCard({
+    title:'A gentle breath',
+    pattern:[4,6,8,0], // slower exhale
+    inhale:'Breathe in slowly…',
+    holdIn:'Hold…',
+    exhale:'Breathe out long and soft…',
+    holdOut:'Rest…',
+    color:'#6B4423',
+    id:'breathe'
+  }));
+
+  // CONNECTIONS
+  const conn = state.data.senior.connections.find(c => c.date === todayKey()) || {calls:[], messages:[]};
+  const connCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'☎️ Kind connections'),
+      h('span',{class:'tag'},'Who is in your circle today?')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Connection is one of the strongest predictors of wellbeing at every age. A short call or note counts.'),
+    h('div',{class:'field'},
+      h('label',{},'Did you speak with someone today?'),
+      h('div',{class:'scale'},
+        ...['No','A note','A call','A visit'].map((opt,i) =>
+          h('button',{class:(conn.level===i?'sel':''), onclick:()=>{
+            const existing = state.data.senior.connections.find(x => x.date === todayKey()) || {date:todayKey()};
+            existing.level = i; existing.label = opt;
+            if(!state.data.senior.connections.includes(existing)) state.data.senior.connections.push(existing);
+            saveState(); render();
+          }}, opt)
+        )
+      )
+    ),
+    h('div',{class:'field', style:'margin-top:1rem'},
+      h('label',{},'Who will you reach out to tomorrow?'),
+      h('input',{class:'input', id:'srNext', placeholder:'A name, or "my granddaughter Emma"',
+        value: state.data.senior.connections.find(c => c.date === todayKey())?.tomorrow || '',
+        oninput:(e)=>{
+          let existing = state.data.senior.connections.find(c => c.date === todayKey());
+          if(!existing){ existing = {date:todayKey()}; state.data.senior.connections.push(existing); }
+          existing.tomorrow = e.target.value; saveState();
+        }
+      })
+    )
+  );
+  root.append(connCard);
+
+  // SMALL PLEASURES
+  const pleas = state.data.senior.pleasures.slice().reverse().slice(0,6);
+  const pleasCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🌷 A small pleasure'),
+      h('span',{class:'tag'},'Notice the good')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'A favorite tea. Bird at the window. A familiar song. Logging small pleasures is linked to greater life satisfaction.'),
+    h('div',{class:'field'},
+      h('label',{},'Today\'s small pleasure'),
+      h('input',{class:'input', id:'srPleas', placeholder:'e.g. "The roses are blooming"'}),
+    ),
+    h('button',{class:'btn primary', onclick:()=>{
+      const v = $('#srPleas', app).value.trim();
+      if(!v){ toast('Even the smallest counts.'); return; }
+      state.data.senior.pleasures.push({text:v, ts:Date.now()});
+      saveState(); render();
+      toast('Lovely. 🌷');
+    }}, svg(iconSpark,18)+' Add to my day'),
+    h('div',{class:'list', style:'margin-top:1.2rem'},
+      pleas.length ? pleas.map(p =>
+        h('div',{class:'list-item', style:'background:var(--primary-soft)'},
+          h('div',{}, '🌷 ' + p.text),
+          h('span',{class:'when'}, relTime(p.ts))
+        )
+      ) : h('div',{class:'empty'},'No pleasures logged yet.')
+    )
+  );
+  root.append(pleasCard);
+
+  // REST & SLEEP
+  const restToday = state.data.senior.rest.find(r => r.date === todayKey());
+  const restCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🌙 Rest & sleep'),
+      h('span',{class:'tag'},'How did you rest?')
+    ),
+    h('div',{class:'field'},
+      h('label',{},'Sleep quality (1 poor – 5 restorative)'),
+      h('div',{class:'scale'},
+        ...[1,2,3,4,5].map(n =>
+          h('button',{class:(restToday?.quality===n?'sel':''), onclick:()=>{
+            let r = state.data.senior.rest.find(x => x.date === todayKey());
+            if(!r){ r = {date:todayKey()}; state.data.senior.rest.push(r); }
+            r.quality = n; saveState(); render();
+          }}, String(n))
+        )
+      )
+    ),
+    h('div',{class:'field'},
+      h('label',{},'How many hours did you rest?'),
+      h('div',{class:'scale'},
+        ...[0,1,2,3,4,5,6,7,8,9,10,11,12].map(n =>
+          h('button',{class:(restToday?.hours===n?'sel':''), onclick:()=>{
+            let r = state.data.senior.rest.find(x => x.date === todayKey());
+            if(!r){ r = {date:todayKey()}; state.data.senior.rest.push(r); }
+            r.hours = n; saveState(); render();
+          }}, String(n))
+        )
+      )
+    ),
+    h('div',{class:'field'},
+      h('label',{},'Any dreams you want to remember? (optional)'),
+      h('textarea',{class:'textarea', id:'srDream', value: restToday?.dream || '', placeholder:'A line or two…', oninput:(e)=>{
+        let r = state.data.senior.rest.find(x => x.date === todayKey());
+        if(!r){ r = {date:todayKey()}; state.data.senior.rest.push(r); }
+        r.dream = e.target.value; saveState();
+      }})
+    )
+  );
+  root.append(restCard);
+
+  // WORRY RELEASE
+  const wrCard = h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🍂 Worry release'),
+      h('span',{class:'tag'},'Write it, then let it go')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'Putting a worry on paper (or on a screen) often makes it smaller. Type it here, then close the page.'),
+    h('textarea',{class:'textarea', id:'srWorry', placeholder:'What\'s weighing on you today?', style:'min-height:120px'}),
+    h('button',{class:'btn secondary lg', style:'margin-top:1rem', onclick:()=>{
+      const v = $('#srWorry', app).value.trim();
+      if(!v){ toast('Write a sentence first.'); return; }
+      $('#srWorry', app).value = '';
+      toast('Released. 🌬️');
+    }}, '🍂 Release it')
+  );
+  root.append(wrCard);
+
+  // CAREGIVER NOTE
+  const cgCard = h('section',{class:'card', style:'background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft))'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'💌 A note to a caregiver'),
+      h('span',{class:'tag'},'Optional · just for you')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'A space to write something you want to share with a family member or caregiver — or just to get out of your head.'),
+    h('textarea',{class:'textarea', id:'srNote', placeholder:'Dear ___, today I…', style:'min-height:120px'}),
+    h('div',{class:'row', style:'margin-top:1rem'},
+      h('button',{class:'btn primary', onclick:()=>{
+        const v = $('#srNote', app).value.trim();
+        if(!v){ toast('Write a line first.'); return; }
+        localStorage.setItem('mindhaus:caregiver-note', v);
+        toast('Saved locally. Copy it whenever you like.');
+      }}, 'Save locally')
+    )
+  );
+  root.append(cgCard);
+
+  // Local help
+  root.append(buildLocalHelpSection('senior'));
+
+  return root;
+}
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+function breathCard({title, pattern, inhale, holdIn, exhale, holdOut, color, id}){
+  const card = h('section',{id:id||'breathe', class:'card', style:'text-align:center'},
+    h('div',{class:'sec-head', style:'justify-content:center;text-align:center'},
+      h('div',{style:'margin:0 auto'},
+        h('h2',{}, title),
+        h('p',{class:'muted'},'Follow the orb. Your nervous system listens.')
+      )
+    ),
+    h('div',{class:'breath-stage'},
+      h('div',{class:'breath-phase', id:'breathPhase'}, 'Ready?'),
+      h('div',{class:'breath-orb idle', id:'breathOrb', style:`background:radial-gradient(circle at 30% 30%,${color}33,${color})`}, '')
+    ),
+    h('div',{class:'breath-counts'},
+      h('span',{}, 'Pattern: ', h('strong',{}, `${pattern[0]}·${pattern[1]}·${pattern[2]}·${pattern[3]}`))
+    ),
+    h('div',{class:'row', style:'justify-content:center;margin-top:1.2rem'},
+      h('button',{class:'btn primary lg', id:'breathStartBtn'}, svg(iconWind,18)+' Start'),
+      h('button',{class:'btn ghost', id:'breathStopBtn', style:'display:none'}, 'Stop')
+    )
+  );
+
+  setTimeout(()=>{
+    const orb = $('#breathOrb', card);
+    const phase = $('#breathPhase', card);
+    const startBtn = $('#breathStartBtn', card);
+    const stopBtn = $('#breathStopBtn', card);
+    let timer = null, running = false, step = 0;
+    const cycle = [
+      {name:inhale, dur:pattern[0]*1000, cls:'inhale'},
+      ...(pattern[1] ? [{name:holdIn, dur:pattern[1]*1000, cls:'hold'}] : []),
+      {name:exhale, dur:pattern[2]*1000, cls:'exhale'},
+      ...(pattern[3] ? [{name:holdOut, dur:pattern[3]*1000, cls:'hold-out'}] : [])
+    ];
+    let cycleCount = 0;
+    function start(){
+      running = true; startBtn.style.display='none'; stopBtn.style.display='inline-flex';
+      cycleCount = 0; next();
+    }
+    function next(){
+      if(!running) return;
+      const c = cycle[step % cycle.length];
+      orb.className = 'breath-orb ' + c.cls;
+      phase.textContent = c.name;
+      timer = setTimeout(()=>{
+        step++;
+        if(step % cycle.length === 0) cycleCount++;
+        if(cycleCount >= 6){ stop(); toast('Six cycles done. Nicely done.'); return; }
+        next();
+      }, c.dur);
+    }
+    function stop(){
+      running = false; clearTimeout(timer);
+      orb.className = 'breath-orb idle';
+      phase.textContent = 'Ready?';
+      startBtn.style.display='inline-flex'; stopBtn.style.display='none';
+    }
+    startBtn.addEventListener('click', start);
+    stopBtn.addEventListener('click', stop);
+  }, 50);
+
+  return card;
+}
+
+function fiveSensesCard(track){
+  const senses = [
+    {n:'5', s:'See', d:'Name 5 things you can see right now.'},
+    {n:'4', s:'Touch', d:'Notice 4 things you can feel — textures, temperatures.'},
+    {n:'3', s:'Hear', d:'Listen for 3 sounds, near and far.'},
+    {n:'2', s:'Smell', d:'Find 2 scents in the air.'},
+    {n:'1', s:'Taste', d:'Notice 1 taste in your mouth right now.'}
+  ];
+  return h('section',{class:'card'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'🎒 5-Senses Adventure'),
+      h('span',{class:'tag'},'When your head feels too big')
+    ),
+    h('p',{class:'muted', style:'margin-bottom:1rem'},'A grounding game. Go in order, at your pace.'),
+    h('div',{class:'row', style:'flexWrap:'+'wrap'},
+      ...senses.map(s =>
+        h('div',{class:'card lift', style:'flex:1 1 140px;text-align:center;cursor:pointer',
+          onclick:()=>toast(`${s.s}: ${s.d}`)},
+          h('div',{class:'display', style:'font-size:2.6rem;color:var(--primary);line-height:1'}, s.n),
+          h('div',{class:'display', style:'font-size:1.1rem;margin-top:.3rem'}, s.s),
+          h('p',{class:'muted', style:'font-size:.85rem;margin-top:.4rem'}, s.d)
+        )
+      )
+    )
+  );
+}
+
+function moodChartCard(data, max, track){
+  const last14 = Array.from({length:14}, (_,i)=>{
+    const d = new Date(Date.now() - (13-i)*86400000);
+    const key = d.toISOString().slice(0,10);
+    const dayData = data.find(x => x.date === key);
+    return {
+      label: ['S','M','T','W','T','F','S'][d.getDay()],
+      v: dayData?.v || dayData?.mood || 0,
+      full: d.toLocaleDateString(undefined,{month:'short', day:'numeric'})
+    };
+  });
+  const hasData = last14.some(d => d.v > 0);
+  const bars = last14.map(d => h('div',{class:'bar-col'},
+    h('div',{class:'bar', style:`height:${Math.max(4, (d.v/max)*100)}%`, 'data-label':`${d.full}${d.v?': '+d.v:''}`}),
+    h('div',{class:'bar-lbl'}, d.label)
+  ));
+  return h('section',{class:'card chart'},
+    h('div',{class:'sec-head'},
+      h('h2',{},'Your last two weeks'),
+      h('span',{class:'tag'},'Patterns are useful data')
+    ),
+    h('p',{class:'muted', style:'font-size:.92rem;margin-bottom:1rem'}, hasData ? 'Hover a bar to see the day. Notice what helps.' : 'After a few check-ins, your pattern will start to appear here.'),
+    h('div',{class:'bars'}, ...(hasData ? bars : [h('div',{class:'empty', style:'flex:1'}, 'No check-ins yet.')]))
+  );
+}
+
+/* ============================================================
+   ONBOARDING (first visit, no age selected)
+   ============================================================ */
+function renderOnboarding(){
+  const root = h('div',{class:'onboard'});
+  root.append(
+    h('div',{class:'privacy-pill'}, '🔒 Everything stays on your device. Nothing is ever sent to a server.'),
+    h('h1',{}, 'Welcome to ', h('em',{},'Mindhaus'), '.'),
+    h('p',{class:'sub'}, 'A private space for your mind. We\'re built to grow with you — so first, who is this for?'),
+    h('div',{class:'track-grid'},
+      trackCard('kid','🐻','Kid','6 – 12','Big feelings, brave breaths, and friendly buddies.', 'Bright, playful, simple.'),
+      trackCard('teen','🧭','Teen','13 – 19','Honest tools for mood, thoughts, sleep, and screens.', 'Real talk. No condescension.'),
+      trackCard('adult','🍃','Adult','20 – 64','Evidence-based practices from CBT, ACT, and mindfulness.', 'Calm, considered, practical.'),
+      trackCard('senior','🏡','Senior','65 +','A gentle space for reflection, memory, and connection.', 'Large, warm, unhurried.')
+    ),
+    h('p',{class:'muted', style:'margin-top:2rem;font-size:.9rem'}, 'You can switch any time from the top bar. Mindhaus is a self-guided companion for everyday wellbeing — it is not a medical service and does not replace professional care. If you are in immediate danger, call 911 (US), 999 (UK), 112 (EU), 000 (AU), or your local emergency number.'),
+    h('p',{class:'muted', style:'margin-top:.8rem;font-size:.82rem'},'By using Mindhaus you accept the ',
+      h('a',{href:'#', onclick:(e)=>{e.preventDefault(); $('#legalModal').classList.add('open');}, style:'color:var(--secondary);text-decoration:underline'}, 'Legal & Disclaimers'),
+      '. © 2026 T. O. Randhir. All rights reserved.'
+    )
+  );
+  return root;
+}
+function trackCard(id, emoji, name, age, blurb, vibe){
+  return h('a',{class:'track-card', href:'#/', onclick:()=>setAge(id)},
+    h('div',{class:'emoji'}, emoji),
+    h('div',{class:'name'}, name),
+    h('div',{class:'age'}, age),
+    h('div',{class:'blurb'}, blurb),
+    h('div',{class:'muted', style:'font-size:.78rem;margin-top:.4rem;font-style:italic'}, vibe)
+  );
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function relTime(ts){
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff/60000);
+  if(m < 1) return 'just now';
+  if(m < 60) return m + 'm ago';
+  const h = Math.floor(m/60);
+  if(h < 24) return h + 'h ago';
+  const d = Math.floor(h/24);
+  if(d < 7) return d + 'd ago';
+  return new Date(ts).toLocaleDateString();
+}
+
+/* ============================================================
+   EVENT WIRING
+   ============================================================ */
+document.addEventListener('click',(e)=>{
+  // age switcher
+  const ageBtn = e.target.closest('#ageSwitch button');
+  if(ageBtn){
+    setAge(ageBtn.dataset.age);
+    location.hash = '#/';
+    return;
+  }
+  // age links in footer
+  const ageLink = e.target.closest('footer [data-age]');
+  if(ageLink){
+    e.preventDefault();
+    setAge(ageLink.dataset.age);
+    location.hash = '#/';
+    return;
+  }
+  // about links
+  if(e.target.closest('#aboutLegal') || e.target.closest('#aboutLegal2')){
+    e.preventDefault();
+    $('#legalModal').classList.add('open');
+  }
+  if(e.target.closest('#aboutPrivacy')){
+    e.preventDefault();
+    $('#legalModal').classList.add('open');
+    setTimeout(()=>{ document.querySelector('#legalContent').scrollTo({top:0}); }, 50);
+  }
+  if(e.target.closest('#aboutScience')){
+    e.preventDefault();
+    alert('What\'s the evidence?\n\nMindhaus tools are drawn from:\n• Cognitive Behavioral Therapy (Beck, 1979)\n• Behavioral Activation (Jacobson, 1996)\n• Acceptance and Commitment Therapy / values work (Hayes, 1999)\n• "Three good things" (Seligman, 2005)\n• Box breathing / 4-7-8 (Weil; yoga tradition)\n• 5-4-3-2-1 grounding (linehan; adapted)\n\nThis app is a self-guided companion — it is not therapy, and does not replace professional care. See the full "Legal & Disclaimers" section in the footer for citations and acknowledgments.');
+  }
+  if(e.target.closest('#aboutReset')){
+    e.preventDefault();
+    if(confirm('This will permanently delete all your data from this device. Continue?')){
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('mindhaus:caregiver-note');
+      state = structuredClone(defaultState);
+      setAge('adult');
+      location.hash = '#/';
+      render();
+      toast('All data cleared.');
+    }
+  }
+});
+
+// crisis modal
+$('#crisisBtn').addEventListener('click', ()=> $('#crisisModal').classList.add('open'));
+$('#crisisClose').addEventListener('click', ()=> $('#crisisModal').classList.remove('open'));
+$('#crisisModal').addEventListener('click', (e)=>{ if(e.target.id === 'crisisModal') $('#crisisModal').classList.remove('open'); });
+document.addEventListener('keydown',(e)=>{ if(e.key === 'Escape') { $('#crisisModal').classList.remove('open'); $('#localHelpModal').classList.remove('open'); } });
+
+// local help modal
+$('#localHelpBtn').addEventListener('click', openLocalHelpModal);
+$('#localHelpModal').addEventListener('click', (e)=>{ if(e.target.id === 'localHelpModal') $('#localHelpModal').classList.remove('open'); });
+
+// legal modal
+$('#legalClose').addEventListener('click', ()=> $('#legalModal').classList.remove('open'));
+$('#legalModal').addEventListener('click', (e)=>{ if(e.target.id === 'legalModal') $('#legalModal').classList.remove('open'); });
+
+// site notice dismiss
+try {
+  if (localStorage.getItem('mindhaus:notice-dismissed') === '1') {
+    const n = $('#siteNotice'); if (n) n.style.display = 'none';
+  }
+} catch(e){}
+$('#siteNoticeClose').addEventListener('click', ()=>{
+  const n = $('#siteNotice'); if (n) n.style.display = 'none';
+  try { localStorage.setItem('mindhaus:notice-dismissed', '1'); } catch(e){}
+});
+
+// floatUp keyframe (injected for worry cloud)
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `@keyframes floatUp{0%{transform:translateY(20px);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-180px) translateX(20px);opacity:0}}`;
+document.head.append(styleSheet);
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function boot(){
+  _userLocation = loadLocation();
+  setAge(state.age);
+  if(!location.hash || location.hash === '#'){
+    // onboarding if first time (no check-ins anywhere)
+    const anyData = Object.values(state.data).some(d => Object.values(d).some(v => Array.isArray(v) ? v.length > 0 : v > 0));
+    if(!anyData) location.hash = '#/onboard';
+    else location.hash = '#/';
+  }
+  if(location.hash === '#/onboard'){
+    app.innerHTML = '';
+    app.append(renderOnboarding());
+  } else {
+    render();
+  }
+}
+boot();
+</script>
+
+</body>
+</html>
