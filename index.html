@@ -1168,7 +1168,22 @@ const h = (tag, attrs={}, ...kids) => {
   }
   return el;
 };
-const svg = (d, size=18) => `<svg class="icon" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+const svg = (d, size=18) => {
+  const s = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  s.setAttribute('class','icon');
+  s.setAttribute('viewBox','0 0 24 24');
+  s.setAttribute('width', size);
+  s.setAttribute('height', size);
+  s.setAttribute('fill','none');
+  s.setAttribute('stroke','currentColor');
+  s.setAttribute('stroke-width','2');
+  s.setAttribute('stroke-linecap','round');
+  s.setAttribute('stroke-linejoin','round');
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', d);
+  s.appendChild(p);
+  return s;
+};
 const iconHeart = '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>';
 const iconArrow = '<path d="M5 12h14M13 5l7 7-7 7"/>';
 const iconCheck = '<path d="M20 6 9 17l-5-5"/>';
@@ -1177,7 +1192,9 @@ const iconWind = '<path d="M9.59 4.59A2 2 0 1 1 11 8H2M17.73 2.27A2.5 2.5 0 1 1 
 
 function toast(msg, iconPath=iconCheck){
   const t = $('#toast');
-  t.innerHTML = `${svg(iconPath,16)} <span>${msg}</span>`;
+  const span = document.createElement('span');
+  span.textContent = msg;
+  t.replaceChildren(svg(iconPath,16), document.createTextNode(' '), span);
   t.classList.add('show');
   clearTimeout(toast._t);
   toast._t = setTimeout(()=>t.classList.remove('show'), 2400);
@@ -1224,8 +1241,8 @@ function renderKid(){
       h('h1',{}, 'Hi friend! How is your ', h('em',{}, 'heart'), ' today?'),
       h('p',{class:'lede'},'Brave Buddies are here to help you check in, breathe, and feel a little better. Let\'s pick how you feel right now!'),
       h('div',{class:'hero-actions'},
-        h('a',{href:'#mood', class:'btn primary lg'}, svg(iconHeart,18)+' How I feel'),
-        h('a',{href:'#breathe', class:'btn ghost lg'}, svg(iconWind,18)+' Brave breath')
+        h('a',{href:'#mood', class:'btn primary lg'}, svg(iconHeart,18), 'How I feel'),
+        h('a',{href:'#breathe', class:'btn ghost lg'}, svg(iconWind,18), 'Brave breath')
       )
     ),
     h('div',{class:'card', style:'text-align:center;background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft))'},
@@ -1302,7 +1319,7 @@ function renderKid(){
       $('#kidWorry', app).value = '';
       toast('Your worry floated away! 🌥️');
       renderWorryCloud();
-    }}, svg(iconWind,18)+' Send it to the sky'),
+    }}, svg(iconWind,18), 'Send it to the sky'),
     h('div',{id:'kidWorryCloud', style:'position:relative;min-height:90px;margin-top:1rem;overflow:hidden;border-radius:var(--radius);background:linear-gradient(180deg,#E3F2FD,#FFF8E7);padding:1rem'},
       h('div',{class:'empty'},'Your cloud garden is clear. ☀️')
     )
@@ -1337,7 +1354,7 @@ function renderKid(){
       $('#kidKind', app).value = '';
       toast('Seed planted! 🌱');
       render();
-    }}, svg(iconSpark,18)+' Plant a seed'),
+    }}, svg(iconSpark,18), 'Plant a seed'),
     h('div',{class:'list', style:'margin-top:1rem'},
       gardenItems.length ? gardenItems : h('div',{class:'empty'},'Your garden is waiting for its first seed. 🌷')
     )
@@ -1523,7 +1540,7 @@ function thoughtUnpackerCard(){
       ['tThought','tEvidence','tBalanced'].forEach(id => $('#'+id, app).value = '');
       toast('Saved. You\'re doing the work.');
       render();
-    }}, svg(iconCheck,18)+' Save this unpacking'),
+    }}, svg(iconCheck,18), 'Save this unpacking'),
     h('div',{class:'list', style:'margin-top:1.2rem'},
       ...(state.data.teen.thoughts.slice().reverse().slice(0,5).map(t =>
         h('div',{class:'list-item'},
@@ -2044,7 +2061,7 @@ function renderSenior(){
       $('#seniorRefl', app).value = '';
       toast('Saved. Thank you for sharing.');
       render();
-    }}, svg(iconCheck,18)+' Save my reflection')
+    }}, svg(iconCheck,18), 'Save my reflection')
   );
   root.append(reflectCard);
 
@@ -2073,7 +2090,7 @@ function renderSenior(){
           state.data.senior.treasured.push({text:t, year:y, ts:Date.now()});
           saveState(); render();
           toast('Memory saved. 📖');
-        }}, svg(iconHeart,18)+' Add to memory book')
+        }}, svg(iconHeart,18), 'Add to memory book')
       )
     ),
     h('div',{class:'list', style:'margin-top:1.2rem'},
@@ -2153,7 +2170,7 @@ function renderSenior(){
       state.data.senior.pleasures.push({text:v, ts:Date.now()});
       saveState(); render();
       toast('Lovely. 🌷');
-    }}, svg(iconSpark,18)+' Add to my day'),
+    }}, svg(iconSpark,18), 'Add to my day'),
     h('div',{class:'list', style:'margin-top:1.2rem'},
       pleas.length ? pleas.map(p =>
         h('div',{class:'list-item', style:'background:var(--primary-soft)'},
@@ -2268,7 +2285,7 @@ function breathCard({title, pattern, inhale, holdIn, exhale, holdOut, color, id}
       h('span',{}, 'Pattern: ', h('strong',{}, `${pattern[0]}·${pattern[1]}·${pattern[2]}·${pattern[3]}`))
     ),
     h('div',{class:'row', style:'justify-content:center;margin-top:1.2rem'},
-      h('button',{class:'btn primary lg', id:'breathStartBtn'}, svg(iconWind,18)+' Start'),
+      h('button',{class:'btn primary lg', id:'breathStartBtn'}, svg(iconWind,18), 'Start'),
       h('button',{class:'btn ghost', id:'breathStopBtn', style:'display:none'}, 'Stop')
     )
   );
