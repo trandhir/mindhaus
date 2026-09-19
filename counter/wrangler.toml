@@ -1,0 +1,33 @@
+# Mindhaus Counter — Cloudflare Worker config
+#
+# After running `wrangler kv:namespace create VISITORS` and
+# `wrangler kv:namespace create COUNTER`, paste the IDs printed
+# by those commands into the id / preview_id fields below.
+
+name = "mindhaus-counter"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# Two KV namespaces are bound to the Worker:
+#   VISITORS — per-visitor dedup keys, all written with a 90-day TTL.
+#              After 90 days of inactivity, the key expires automatically
+#              and the next visit counts as a new unique visitor.
+#   COUNTER  — single key 'total' holding the cumulative unique-visitor
+#              count. Incremented atomically on each new-visitor event.
+
+[[kv_namespaces]]
+binding = "VISITORS"
+id = "REPLACE_AFTER_wrangler_kv_namespace_create_VISITORS"
+preview_id = "REPLACE_AFTER_wrangler_kv_namespace_create_VISITORS_PREVIEW"
+
+[[kv_namespaces]]
+binding = "COUNTER"
+id = "REPLACE_AFTER_wrangler_kv_namespace_create_COUNTER"
+preview_id = "REPLACE_AFTER_wrangler_kv_namespace_create_COUNTER_PREVIEW"
+
+# Optional: scheduled cron (free tier allows up to 5).
+# Uncomment if you want a daily sanity-check ping; KV TTL already
+# handles expiry so this is purely a no-op notification hook.
+#
+# [triggers]
+# crons = ["0 5 * * *"]
