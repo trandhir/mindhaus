@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -493,8 +494,10 @@ body[data-age="teen"] .local-help-card{background:linear-gradient(135deg,rgba(12
     <p style="font-size:.92rem;line-height:1.6">Mindhaus does not knowingly collect personal information from children under 13. All data is stored locally in your browser and never sent to a server. You can clear a child's data at any time using the "Reset all my data" link in the footer.</p>
 
     <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">7. Privacy</h3>
-    <p style="font-size:.92rem;line-height:1.6">Mindhaus runs entirely in your browser. Everything you write — mood logs, journal entries, reflections, thought records, treasured memories — is stored in your browser's local storage on the device you are using. Nothing is transmitted to a server. No analytics, tracking, advertising, or third-party services are loaded that collect your data.</p>
-    <p style="font-size:.92rem;line-height:1.6">The one exception is the optional "Use my location" feature in the Local help section, which — only when you tap it — sends your device's coordinates to OpenStreetMap (Nominatim) to identify your country. Coordinates are not stored; only the country code is remembered on your device.</p>
+    <p style="font-size:.92rem;line-height:1.6">Mindhaus runs primarily in your browser. Everything you write — mood logs, journal entries, reflections, thought records, treasured memories — is stored in your browser's local storage on the device you are using.</p>
+    <p style="font-size:.92rem;line-height:1.6"><strong>There are exactly two things that leave your device, and you can read each of them in plain language below.</strong> No other analytics, advertising, fingerprinting, or third-party tracking services are loaded.</p>
+    <p style="font-size:.92rem;line-height:1.6"><strong>1. Anonymous visit counter.</strong> When you load Mindhaus, your browser sends a single anonymous request to a self-hosted counter so the maintainer can know how many people use the app. The request includes only a randomly-generated visitor ID stored in your browser's localStorage. No IP address is stored, no fingerprint, no cookies, no personal data. The visitor ID expires server-side after 90 days of inactivity. The counter is operated by T. O. Randhir via Cloudflare Workers; the counter endpoint receives your IP address transiently to route the request but does not store or log it. You can opt out by clearing the <code>mh:visitor-id</code> entry in your browser's localStorage (Settings → Site Data, or use the "Reset all my data" link in the footer). Doing so will cause your next visit to be counted as a new visitor.</p>
+    <p style="font-size:.92rem;line-height:1.6"><strong>2. Optional location lookup.</strong> The "Use my location" feature in the Local help section — only when you tap it — sends your device's coordinates to OpenStreetMap (Nominatim) to identify your country. Coordinates are not stored; only the country code is remembered on your device.</p>
     <p style="font-size:.92rem;line-height:1.6">You can clear all your data at any time via "Reset all my data" in the footer.</p>
 
     <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:1.4rem 0 .4rem">8. Changes to these terms</h3>
@@ -535,7 +538,7 @@ body[data-age="teen"] .local-help-card{background:linear-gradient(135deg,rgba(12
   </div>
   <div class="foot" style="border-top:1px solid var(--line);padding-top:1rem;margin-top:1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.78rem;color:var(--ink-soft)">
     <div>Mindhaus is a self-guided wellness companion. It is <strong>not</strong> a medical service and does not replace professional care. If you are in immediate danger, call your local emergency number (911 in the US).</div>
-    <div>© 2026 T. O. Randhir · <a href="#" id="aboutLegal2" style="color:inherit;text-decoration:underline">Legal &amp; disclaimers</a></div>
+    <div>© 2026 T. O. Randhir · <a href="#" id="aboutLegal2" style="color:inherit;text-decoration:underline">Legal &amp; disclaimers</a> · <span style="opacity:.7">Visits counted anonymously via a self-hosted counter (no IP, no cookies). <a href="#" id="aboutLegal2" style="color:inherit;text-decoration:underline">Details</a>.</span></div>
   </div>
 </footer>
 
@@ -588,6 +591,46 @@ function setAge(age){
 
 function todayKey(d=new Date()){
   return d.toISOString().slice(0,10);
+}
+
+/* ============================================================
+   PRIVACY-PRESERVING VISIT COUNTER
+   Set COUNTER_URL to your deployed Cloudflare Worker URL to
+   enable anonymous unique-visitor counting. Leave '' to disable.
+   See counter/SETUP.md for instructions.
+   ============================================================ */
+const COUNTER_URL = ''; // e.g. 'https://mindhaus-counter.YOUR_SUBDOMAIN.workers.dev' — leave empty to disable
+const COUNTER_VISITOR_KEY = 'mh:visitor-id';
+
+function makeVisitorId(){
+  try {
+    if(typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  } catch(e){}
+  // Fallback: 128-bit random hex
+  const a = new Uint8Array(16);
+  if(typeof crypto !== 'undefined' && crypto.getRandomValues){ crypto.getRandomValues(a); }
+  else for(let i=0;i<16;i++) a[i] = Math.floor(Math.random()*256);
+  return Array.from(a, b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function sendVisitPing(){
+  if(!COUNTER_URL) return; // disabled
+  try {
+    let id = null;
+    try { id = localStorage.getItem(COUNTER_VISITOR_KEY); } catch(e){}
+    if(!id || typeof id !== 'string' || id.length < 16 || id.length > 128){
+      id = makeVisitorId();
+      try { localStorage.setItem(COUNTER_VISITOR_KEY, id); } catch(e){}
+    }
+    const url = COUNTER_URL.replace(/\/+$/,'') + '/ping?id=' + encodeURIComponent(id);
+    // sendBeacon is the most privacy-friendly: survives page unload, no preflight, fire-and-forget
+    if(typeof navigator !== 'undefined' && navigator.sendBeacon){
+      try { navigator.sendBeacon(url); return; } catch(e){}
+    }
+    if(typeof fetch !== 'undefined'){
+      fetch(url, {method:'GET', mode:'no-cors', keepalive:true, cache:'no-store'}).catch(()=>{});
+    }
+  } catch(e){ /* never let analytics break the app */ }
 }
 
 /* ============================================================
@@ -2516,6 +2559,9 @@ document.head.append(styleSheet);
 function boot(){
   _userLocation = loadLocation();
   setAge(state.age);
+  // Send the anonymous visit ping (if COUNTER_URL is set). Deferred so it
+  // never blocks first paint and never throws into the UI.
+  setTimeout(sendVisitPing, 1500);
   if(!location.hash || location.hash === '#'){
     // onboarding if first time (no check-ins anywhere)
     const anyData = Object.values(state.data).some(d => Object.values(d).some(v => Array.isArray(v) ? v.length > 0 : v > 0));
